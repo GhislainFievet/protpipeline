@@ -1,10 +1,10 @@
 protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
-    args <- commandArgs(trailingOnly = TRUE)
+    # args <- commandArgs(trailingOnly = TRUE)
 
-    if (length(args) < 3 ){
-        print("You need to give an output_dir, the max quant dir and a yaml config file")
-        quit()
-    }
+    # if (length(args) < 3 ){
+    #     print("You need to give an output_dir, the max quant dir and a yaml config file")
+    #     quit()
+    # }
 
     library(yaml)
     args = read_yaml(yaml_config_file)
