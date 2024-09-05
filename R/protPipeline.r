@@ -86,11 +86,11 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     library(tidyr)
     library(ggplot2)
     library(preprocessCore)
-    source(max_quant_process_path)
-    source(prot_filter_path)
-    source(prot_normalize_path)
-    source(prot_impute_path)
-    source(prot_plots_path)
+    # source(max_quant_process_path)
+    # source(prot_filter_path)
+    # source(prot_normalize_path)
+    # source(prot_impute_path)
+    # source(prot_plots_path)
 
     ###### Create directories if needed ######
 
