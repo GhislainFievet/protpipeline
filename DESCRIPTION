@@ -13,7 +13,7 @@ License:
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Suggests: knitr
-Imports: DEP, dplyr, proteus, SummarizedExperiment, stringr, tidyr, ggplot2, preprocessCore, readxl, impute, randomForest, itertools, Metrics
+Suggests: knitr, DEP, SummarizedExperiment, preprocessCore, impute
+Imports: dplyr, proteus, stringr, tidyr, ggplot2,  readxl, randomForest, itertools, Metrics
 
 VignetteBuilder: knitr
