@@ -1,0 +1,19 @@
+Package: protpipeline 
+Title: protpipeline, proteome construction pipeline from Maxquant files
+Version: 0.99.0
+Authors@R: c(
+    person("Ghislain", "FIEVET", , "ghislain.fievet@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0337-7327")),
+    person("Sébastien", "HERGALANT", role = "aut",
+    email="sebastien.hergalant@inserm.fr", comment=c(ORCID = "0000-0001-8456-7992")),
+    person("Romain", "PIUCCO", , "romain.piucco@univ-lorraine.fr", role = "aut"))
+Description:
+    protpipeline, proteome construction pipeline from Maxquant files. It handle MAR, MNAR and imputation.
+License: 
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Suggests: knitr
+Imports: DEP, dplyr, proteus, SummarizedExperiment, stringr, tidyr, ggplot2, preprocessCore, readxl, impute, randomForest, itertools, Metrics
+
+VignetteBuilder: knitr
