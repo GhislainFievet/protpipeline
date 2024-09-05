@@ -58,27 +58,27 @@ prot_plots <- function(before_filter_path,
 
 
     ###### Export plots ######
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_nb_after_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep, "_nb_after_filter.png"))
     message("Writing ",plot_path," plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(plot_numbers(se_after_filter) + labs(title = paste0(prot_or_pep_2, " per sample"), x = "",
          y = paste0("Number of ", prot_or_pep_3)))
     dev.off()
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_nb_before_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep, "_nb_before_filter.png"))
     message("Writing ", plot_path," plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(plot_numbers(se_before_filter) + labs(title = paste0(prot_or_pep_2, " per sample"), x = "",
          y = paste0("Number of ", prot_or_pep_3)))
     dev.off()
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_miss_map_after_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep, "_miss_map_after_filter.png"))
     message("Writing ", plot_path, " plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(plot_missval(se_after_filter))
     dev.off()
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_miss_map_before_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep, "_miss_map_before_filter.png"))
     if ( length(rownames(df_before_filter)) < 10000){
         message("Writing ", plot_path, " plot")
         png(filename=plot_path, width = 1000, height = 800)
@@ -93,34 +93,34 @@ prot_plots <- function(before_filter_path,
     temp_before_filter@assays@data[[1]] = log2(temp_before_filter@assays@data[[1]])
     temp_after_filter@assays@data[[1]] = log2(temp_after_filter@assays@data[[1]])
     if (file.exists(after_imputation_path)){
-        plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_normalize.png"))
+        plot_path <- file.path(output_dir, paste0(prot_or_pep, "_normalize.png"))
         message("Writing ",plot_path," plot")
         png(filename=plot_path, width = 1000, height = 800)
 
         print(plot_normalization(temp_before_filter, temp_after_filter, se_after_normalization, se_after_imputation))
         dev.off()
     } else {
-        plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_normalize.png"))
+        plot_path <- file.path(output_dir, paste0(prot_or_pep, "_normalize.png"))
         message("Writing ",plot_path," plot")
         png(filename=plot_path, width = 1000, height = 800)
         print(plot_normalization(temp_before_filter, temp_after_filter, se_after_normalization))
         dev.off()
     }
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_normalize_before_vs_after_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep, "_normalize_before_vs_after_filter.png"))
     message("Writing ",plot_path," plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(plot_normalization(se_before_filter, se_after_filter))
     dev.off()
 
     if (file.exists(after_imputation_path)){
-        plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_normalize_normalized_vs_imputation.png"))
+        plot_path <- file.path(output_dir, paste0(prot_or_pep, "_normalize_normalized_vs_imputation.png"))
         message("Writing ",plot_path," plot")
         png(filename=plot_path, width = 1000, height = 800)
         print(plot_normalization(se_after_normalization, se_after_imputation))
         dev.off()
     } else {
-        plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_normalize_normalized_vs_imputation.png"))
+        plot_path <- file.path(output_dir, paste0(prot_or_pep, "_normalize_normalized_vs_imputation.png"))
         message("Writing ",plot_path," plot")
         png(filename=plot_path, width = 1000, height = 800)
         print(plot_normalization(se_after_normalization))
@@ -128,7 +128,7 @@ prot_plots <- function(before_filter_path,
     }
 
     if (file.exists(after_imputation_path)){
-        plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_conditions_distributions.png"))
+        plot_path <- file.path(output_dir, paste0(prot_or_pep, "_conditions_distributions.png"))
         message("Writing ", plot_path, " plot")
         png(filename= plot_path, width = 1000, height = 800)
         temp_before_filter = se_before_filter
@@ -138,7 +138,7 @@ prot_plots <- function(before_filter_path,
         print(plot_imputation(temp_before_filter, temp_after_filter, se_after_normalization, se_after_imputation))
         dev.off()
     } else {
-        plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_conditions_distributions.png"))
+        plot_path <- file.path(output_dir, paste0(prot_or_pep, "_conditions_distributions.png"))
         message("Writing ", plot_path, " plot")
         png(filename= plot_path, width = 1000, height = 800)
         temp_before_filter = se_before_filter
@@ -149,20 +149,20 @@ prot_plots <- function(before_filter_path,
         dev.off()
     }
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep,"_conditions_distributions_before_vs_after_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep,"_conditions_distributions_before_vs_after_filter.png"))
     message("Writing ", plot_path, " plot")
     png(filename= plot_path, width = 1000, height = 800)
     print(plot_imputation(se_before_filter, se_after_filter))
     dev.off()
 
     if (file.exists(after_imputation_path)){
-        plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep,"_conditions_distributions_normalized_vs_imputation.png"))
+        plot_path <- file.path(output_dir, paste0(prot_or_pep,"_conditions_distributions_normalized_vs_imputation.png"))
         message("Writing ", plot_path, " plot")
         png(filename= plot_path, width = 1000, height = 800)
         print(plot_imputation(se_after_normalization, se_after_imputation))
         dev.off()
     } else {
-        plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep,"_conditions_distributions_normalized_vs_imputation.png"))
+        plot_path <- file.path(output_dir, paste0(prot_or_pep,"_conditions_distributions_normalized_vs_imputation.png"))
         message("Writing ", plot_path, " plot")
         png(filename= plot_path, width = 1000, height = 800)
         print(plot_imputation(se_after_normalization))
@@ -192,7 +192,7 @@ prot_plots <- function(before_filter_path,
         coord_flip() +
         labs(title = "Ratio of missing value by sample", x =' Samples', y = "% of missing value")
 
-    plot_path <- file.path(output_dir,output_dir_plots,paste0(prot_or_pep,"_missing_values_after_filter.png"))
+    plot_path <- file.path(output_dir,paste0(prot_or_pep,"_missing_values_after_filter.png"))
     message("Writing ",plot_path," plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(percentage.plot)
@@ -211,7 +211,7 @@ prot_plots <- function(before_filter_path,
     labs(x = "Samples", y = prot_or_pep_2, title = paste0("Missing ",prot_or_pep_3," by sample, after filter")) +
     coord_flip()
 
-    plot_path <- file.path(output_dir,output_dir_plots,paste0(prot_or_pep,"_missing_",prot_or_pep_4,"_by_sample_map_after_filter.png"))
+    plot_path <- file.path(output_dir,paste0(prot_or_pep,"_missing_",prot_or_pep_4,"_by_sample_map_after_filter.png"))
     message("Writing ",plot_path," plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(row.plot)
@@ -230,7 +230,7 @@ prot_plots <- function(before_filter_path,
     labs(x = "Sample", y = prot_or_pep_2, title = paste0("Missing ", prot_or_pep_3, " by sample, before filter")) + coord_flip()
 
     
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_missing_", prot_or_pep_4, "_by_sample_map_before_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep, "_missing_", prot_or_pep_4, "_by_sample_map_before_filter.png"))
     if (prot_or_pep == "prot"){
         message("Writing ", plot_path, " plot")
         png(filename=plot_path, width = 1000, height = 800)
@@ -262,7 +262,7 @@ prot_plots <- function(before_filter_path,
         }
 
         p_75 <- tab_after
-        plot_path <- file.path(output_dir,output_dir_plots,paste0(prot_or_pep,"_correlation_plot_filter.png"))
+        plot_path <- file.path(output_dir,paste0(prot_or_pep,"_correlation_plot_filter.png"))
         message("Writing ",plot_path," plot")
         png(file=plot_path, width = 1000, height = 800)
         correlation_plot_filtre <- plot( stats.matrix[1,], ylab="correlation coeff.", ylim = c(0,1), xlab="samples", lwd=1, col="blue", type="l", xaxt="n", main="Correlation to median sample expression" )
@@ -270,7 +270,7 @@ prot_plots <- function(before_filter_path,
         print(correlation_plot_filtre)
         dev.off()
 
-        plot_path <- file.path(output_dir,output_dir_plots,paste0(prot_or_pep,"_distribution_plot_filter.png"))
+        plot_path <- file.path(output_dir,paste0(prot_or_pep,"_distribution_plot_filter.png"))
         message("Writing ",plot_path," plot")
         png(file=plot_path, width = 1000, height = 800)
         min_born <- floor(min(stats.matrix[2,])) -5
@@ -334,7 +334,7 @@ concat_plots <- function(after_filter_path, after_normalization_path, after_impu
 
 
     ###### Export plots ######
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_nb_after_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep, "_nb_after_filter.png"))
     message("Writing ", plot_path, " plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(plot_numbers(se_after_filter) + labs(title = paste0(prot_or_pep_2, " per sample"), x = "",
@@ -342,14 +342,14 @@ concat_plots <- function(after_filter_path, after_normalization_path, after_impu
     dev.off()
 
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep, "_miss_map_after_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep, "_miss_map_after_filter.png"))
     message("Writing ", plot_path, " plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(plot_missval(se_after_filter))
     dev.off()
 
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep,"_normalize.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep,"_normalize.png"))
     message("Writing ",plot_path," plot")
     png(filename=plot_path, width = 1000, height = 800)
     temp_after_filter = se_after_filter
@@ -357,31 +357,31 @@ concat_plots <- function(after_filter_path, after_normalization_path, after_impu
     print(plot_normalization(temp_after_filter, se_after_normalization, se_after_imputation))
     dev.off()
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep,"_normalize_after_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep,"_normalize_after_filter.png"))
     message("Writing ",plot_path," plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(plot_normalization(se_after_filter))
     dev.off()
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep,"_normalize_normalized_vs_imputation.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep,"_normalize_normalized_vs_imputation.png"))
     message("Writing ",plot_path," plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(plot_normalization(se_after_normalization, se_after_imputation))
     dev.off()
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep,"_conditions_distributions.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep,"_conditions_distributions.png"))
     message("Writing ", plot_path, " plot")
     png(filename= plot_path, width = 1000, height = 800)
     print(plot_imputation(temp_after_filter, se_after_normalization, se_after_imputation))
     dev.off()
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep,"_conditions_distributions_after_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep,"_conditions_distributions_after_filter.png"))
     message("Writing ", plot_path, " plot")
     png(filename= plot_path, width = 1000, height = 800)
     print(plot_imputation(se_after_filter))
     dev.off()
 
-    plot_path <- file.path(output_dir, output_dir_plots, paste0(prot_or_pep,"_conditions_distributions_normalized_vs_imputation.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep,"_conditions_distributions_normalized_vs_imputation.png"))
     message("Writing ", plot_path, " plot")
     png(filename= plot_path, width = 1000, height = 800)
     print(plot_imputation(se_after_normalization, se_after_imputation))
@@ -409,7 +409,7 @@ concat_plots <- function(after_filter_path, after_normalization_path, after_impu
         coord_flip() +
         labs(title = "Ratio of missing value by sample", x =' Samples', y = "% of missing value")
 
-    plot_path <- file.path(output_dir,output_dir_plots,paste0(prot_or_pep,"_missing_values_after_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep,"_missing_values_after_filter.png"))
     message("Writing ",plot_path," plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(percentage.plot)
@@ -429,7 +429,7 @@ concat_plots <- function(after_filter_path, after_normalization_path, after_impu
     y = prot_or_pep_2, title = paste0("Missing ",prot_or_pep_3," by sample, after filter")) +
     coord_flip()
 
-    plot_path <- file.path(output_dir,output_dir_plots,paste0(prot_or_pep, "_missing_", prot_or_pep_4, "_by_sample_map_after_filter.png"))
+    plot_path <- file.path(output_dir, paste0(prot_or_pep, "_missing_", prot_or_pep_4, "_by_sample_map_after_filter.png"))
     message("Writing ",plot_path," plot")
     png(filename=plot_path, width = 1000, height = 800)
     print(row.plot)
@@ -458,7 +458,7 @@ concat_plots <- function(after_filter_path, after_normalization_path, after_impu
         }
 
         p_75 <- tab_after
-        plot_path <- file.path(output_dir,output_dir_plots,paste0(prot_or_pep,"_correlation_plot_filter.png"))
+        plot_path <- file.path(output_dir, paste0(prot_or_pep,"_correlation_plot_filter.png"))
         message("Writing ",plot_path," plot")
         png(file=plot_path, width = 1000, height = 800)
         correlation_plot_filtre <- plot( stats.matrix[1,], ylab="correlation coeff.", ylim = c(0,1), xlab="samples", lwd=1, col="blue", type="l", xaxt="n", main="Correlation to median sample expression" )
@@ -466,7 +466,7 @@ concat_plots <- function(after_filter_path, after_normalization_path, after_impu
         print(correlation_plot_filtre)
         dev.off()
 
-        plot_path <- file.path(output_dir,output_dir_plots,paste0(prot_or_pep,"_distribution_plot_filter.png"))
+        plot_path <- file.path(output_dir, paste0(prot_or_pep,"_distribution_plot_filter.png"))
         message("Writing ",plot_path," plot")
         png(file=plot_path, width = 1000, height = 800)
         min_born <- floor(min(stats.matrix[2,])) -5
