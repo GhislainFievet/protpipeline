@@ -1,16 +1,3 @@
-.onLoad <- function(libname, pkgname) {
-    # Vérifie si BiocManager est installé
-    if (!requireNamespace("BiocManager", quietly = TRUE)) {
-        install.packages("BiocManager")
-    }
-    # Installe les packages Bioconductor nécessaires
-    BiocManager::install("DEP")
-    BiocManager::install("SummarizedExperiment")
-    BiocManager::install("preprocessCore")
-    BiocManager::install("imputeGenomicAlignments")
-}
-
-
 protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     # args <- commandArgs(trailingOnly = TRUE)
 
