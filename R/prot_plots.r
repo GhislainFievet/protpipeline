@@ -1,4 +1,10 @@
-prot_plots <- function(before_filter_path, after_filter_path, after_normalization_path, after_imputation_path, conditions_path, plot_dir, prot_or_pep){
+prot_plots <- function(before_filter_path,
+                        after_filter_path,
+                        after_normalization_path,
+                        after_imputation_path,
+                        conditions_path,
+                        plot_dir,
+                        prot_or_pep){
     prot_or_pep_2 = "Proteins"
     prot_or_pep_3 = "proteins"
     prot_or_pep_4 = "proteins"
@@ -16,6 +22,7 @@ prot_plots <- function(before_filter_path, after_filter_path, after_normalizatio
         prot_or_pep_5 = "Protein or peptide"
     }
 
+    output_dir <- plot_dir
 
     ###### load files ######
     df_before_filter = read.csv(before_filter_path, sep="\t")

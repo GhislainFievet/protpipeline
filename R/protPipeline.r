@@ -196,7 +196,8 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
         after_normalization_path <- file.path(output_dir, output_dir_normalized, output_proteome_data)
         after_imputation_path <- file.path(output_dir, output_dir_imputed, output_proteome_data)
         plot_dir <- file.path(output_dir, output_dir_plots)
-        prot_plots(before_filter_path, after_filter_path, after_normalization_path, after_imputation_path, conditions_new_sample_names_path, plot_dir, "prot")
+        prot_plots(before_filter_path, after_filter_path, after_normalization_path,
+        after_imputation_path, conditions_new_sample_names_path, plot_dir, "prot")
     }
 
     # For proteins
