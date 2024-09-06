@@ -24,12 +24,12 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     imputation_method = args$imputation_method
 
     # lib path
-    max_quant_process_path = args$max_quant_process_path
-    prot_filter_path = args$prot_filter_path
-    prot_normalize_path = args$prot_normalize_path
-    prot_impute_path = args$prot_impute_path
-    rf_impute_lib_path = args$rf_impute_lib_path
-    prot_plots_path = args$prot_plots_path
+    # max_quant_process_path = args$max_quant_process_path
+    # prot_filter_path = args$prot_filter_path
+    # prot_normalize_path = args$prot_normalize_path
+    # prot_impute_path = args$prot_impute_path
+    # rf_impute_lib_path = args$rf_impute_lib_path
+    # prot_plots_path = args$prot_plots_path
 
     # output directories path
     output_dir_new_names = args$output_dir_new_names
@@ -84,6 +84,16 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     if (!dir.exists(output_dir)){
         dir.create(output_dir, recursive = TRUE)
     }
+
+    # Get list of folders in output_dir
+    output_dir_list <- list.dirs(output_dir, full.names = FALSE, recursive = FALSE)
+
+    # Get date and time (with seconds) for new folder
+    my_prefix <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
+    new_prot_dir <- paste0("pipe_results", "_", my_prefix)
+    output_dir <- file.path(output_dir, new_prot_dir)
+    dir.create(output_dir, recursive = TRUE)
+
     if (!dir.exists(file.path(output_dir,output_dir_filtered))){
         dir.create(file.path(output_dir,output_dir_filtered), recursive = TRUE)
     }
@@ -106,51 +116,74 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     ###### Only keep LFQ.intensity.XXX samples needed ######
     # For proteins
     if ( pipeline_mode == "both" || pipeline_mode == "prot"){
-        data_new_sample_names_path <- file.path(output_dir,output_dir_new_names,output_proteome_data)
-        conditions_new_sample_names_path <- file.path(output_dir,conditions_new_sample_names)
-        prot_annotations_path <- file.path(output_dir,prot_annotations_path)
-        df_prot_results <- prot_max_quant_process( proteinGroups_path, conditions_path, data_new_sample_names_path, conditions_new_sample_names_path, prot_annotations_path, remove_reverse_identified_contaminant)
+        data_new_sample_names_path <- file.path(output_dir,output_dir_new_names,
+                paste0(my_prefix, "_", output_proteome_data))
+        conditions_new_sample_names_path <- file.path(output_dir,
+                paste0(my_prefix, "_", conditions_new_sample_names))
+        prot_annotations_path <- file.path(output_dir,
+                paste0(my_prefix, "_", prot_annotations_path))
+        df_prot_results <- prot_max_quant_process( proteinGroups_path, conditions_path,
+                                data_new_sample_names_path, conditions_new_sample_names_path,
+                                prot_annotations_path, remove_reverse_identified_contaminant,
+                                my_prefix)
     }
     # For peptides
     if ( pipeline_mode == "both" || pipeline_mode == "pep"){
-        pep_data_new_sample_names_path <- file.path(output_dir,output_dir_new_names,output_peptidome_data)
-        conditions_new_sample_names_path <- file.path(output_dir,conditions_new_sample_names)
-        pep_annotations_path <- file.path(output_dir,pep_annotations_path)
-        df_pep_results <- pep_max_quant_process( peptides_path, conditions_path, pep_data_new_sample_names_path, conditions_new_sample_names_path, pep_annotations_path, remove_reverse_identified_contaminant )
+        pep_data_new_sample_names_path <- file.path(output_dir,output_dir_new_names,
+                paste0(my_prefix, "_", output_peptidome_data))
+        conditions_new_sample_names_path <- file.path(output_dir,
+                paste0(my_prefix, "_", conditions_new_sample_names))
+        pep_annotations_path <- file.path(output_dir,
+                paste0(my_prefix, "_", pep_annotations_path))
+        df_pep_results <- pep_max_quant_process( peptides_path, conditions_path, pep_data_new_sample_names_path,
+                                conditions_new_sample_names_path, pep_annotations_path,
+                                remove_reverse_identified_contaminant, my_prefix)
     }
 
 
     ###### Filter proteins ######
     # For proteins
     if ( pipeline_mode == "both" || pipeline_mode == "prot"){
-        data_filtered_path <- file.path(output_dir,output_dir_filtered, output_proteome_data)
-        message(data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, data_filtered_path, atLeastOne)
-        df_prot_filtered <- prot_filter(data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, data_filtered_path, atLeastOne)
+        data_filtered_path <- file.path(output_dir,output_dir_filtered, 
+                    paste0(my_prefix, "_", output_proteome_data))
+        message(data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        df_prot_filtered <- prot_filter(data_new_sample_names_path, conditions_new_sample_names_path,
+                                thresholds_path, data_filtered_path, atLeastOne, my_prefix)
     }
 
     # For peptides
     if ( pipeline_mode == "pep"){
-        pep_data_filtered_path <- file.path(output_dir,output_dir_filtered, output_peptidome_data)
-        message(pep_data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, data_filtered_path, atLeastOne)
-        df_pep_filtered <- pep_filter(pep_data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, pep_annotations_path, pep_data_filtered_path, peptide_occurence_filter, atLeastOne)
+        pep_data_filtered_path <- file.path(output_dir,output_dir_filtered,
+                    paste0(my_prefix, "_", output_peptidome_data))
+        message(pep_data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        df_pep_filtered <- pep_filter(pep_data_new_sample_names_path, conditions_new_sample_names_path,
+                                thresholds_path, pep_annotations_path, pep_data_filtered_path,
+                                peptide_occurence_filter, atLeastOne, my_prefix)
     }
     if ( pipeline_mode == "both"){
-        pep_data_filtered_path <- file.path(output_dir,output_dir_filtered, output_peptidome_data)
-        message(pep_data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, data_filtered_path, atLeastOne)
-        df_pep_filtered <- pep_filter_both(pep_data_new_sample_names_path, data_filtered_path, conditions_new_sample_names_path, thresholds_path, pep_annotations_path, prot_annotations_path, pep_data_filtered_path, peptide_occurence_filter, atLeastOne)
+        pep_data_filtered_path <- file.path(output_dir,output_dir_filtered,
+                    paste0(my_prefix, "_", output_peptidome_data))
+        message(pep_data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        df_pep_filtered <- pep_filter_both(pep_data_new_sample_names_path, data_filtered_path,
+                                conditions_new_sample_names_path, thresholds_path, pep_annotations_path, prot_annotations_path,
+                                pep_data_filtered_path, peptide_occurence_filter, atLeastOne, my_prefix)
     }
 
 
     ###### Normalization ######
     # For proteins
     if ( pipeline_mode == "both" || pipeline_mode == "prot"){
-        norm_output_path <- file.path(output_dir,output_dir_normalized, output_proteome_data)
-        df_prot_normalized <- prot_normalize(data_filtered_path, norm_output_path, conditions_new_sample_names_path, prot_norm_method)
+        norm_output_path <- file.path(output_dir,output_dir_normalized,
+                    paste0(my_prefix, "_", output_proteome_data))
+        df_prot_normalized <- prot_normalize(data_filtered_path, norm_output_path, conditions_new_sample_names_path,
+                        prot_norm_method, my_prefix)
     }
     # For peptides
     if ( pipeline_mode == "both" || pipeline_mode == "pep"){
-        pep_norm_output_path <- file.path(output_dir,output_dir_normalized, output_peptidome_data)
-        df_pep_normalized <- prot_normalize(pep_data_filtered_path, pep_norm_output_path, conditions_new_sample_names_path, pep_norm_method)
+        pep_norm_output_path <- file.path(output_dir,output_dir_normalized,
+                    paste0(my_prefix, "_", output_peptidome_data))
+        df_pep_normalized <- prot_normalize(pep_data_filtered_path, pep_norm_output_path,
+                        conditions_new_sample_names_path, pep_norm_method, my_prefix)
     }
 
 
@@ -174,47 +207,67 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
 
     # For proteins
     if ( pipeline_mode == "prot" ){
-        impute_output_path <- file.path(output_dir, output_dir_imputed, output_proteome_data)
-        prot_impute <- prot_impute(norm_output_path, impute_output_path, imputation_method, k=k, rowmax=rowmax, colmax=colmax)
+        impute_output_path <- file.path(output_dir, output_dir_imputed,
+                    paste0(my_prefix, "_", output_proteome_data))
+        prot_impute <- prot_impute(norm_output_path, impute_output_path, imputation_method, k=k,
+                            rowmax=rowmax, colmax=colmax, my_prefix)
     }
     # For peptides
     if ( pipeline_mode == "pep"){
-        pep_impute_output_path <- file.path(output_dir, output_dir_imputed, output_peptidome_data)
-        pep_impute <- prot_impute(pep_norm_output_path, pep_impute_output_path, imputation_method, k=k, rowmax=rowmax, colmax=colmax)
+        pep_impute_output_path <- file.path(output_dir, output_dir_imputed,
+                    paste0(my_prefix, "_", output_peptidome_data))
+        pep_impute <- prot_impute(pep_norm_output_path, pep_impute_output_path, imputation_method, k=k,
+                            rowmax=rowmax, colmax=colmax, my_prefix)
     }
     # For proteins + peptides
     if ( pipeline_mode == "both" ){
-        impute_both <- concate_normalize_and_impute(data_filtered_path, pep_data_filtered_path, prot_annotations_path, pep_annotations_path, output_dir, output_both_data, conditions_new_sample_names_path, both_norm_method, imputation_method, k=k, rowmax=rowmax, colmax=colmax)
+        impute_both <- concate_normalize_and_impute(data_filtered_path, pep_data_filtered_path,
+                            prot_annotations_path, pep_annotations_path, output_dir, output_both_data,
+                            conditions_new_sample_names_path, both_norm_method, imputation_method, k=k,
+                            rowmax=rowmax, colmax=colmax, my_prefix)
     }
 
 
     ###### Plots ######
     # For proteins
     if ( pipeline_mode == "both" || pipeline_mode == "prot" ){
-        before_filter_path <- file.path(output_dir, output_dir_new_names, output_proteome_data)
-        after_filter_path <- file.path(output_dir, output_dir_filtered, output_proteome_data)
-        after_normalization_path <- file.path(output_dir, output_dir_normalized, output_proteome_data)
-        after_imputation_path <- file.path(output_dir, output_dir_imputed, output_proteome_data)
+        before_filter_path <- file.path(output_dir, output_dir_new_names,
+                    paste0(my_prefix, "_", output_proteome_data))
+        after_filter_path <- file.path(output_dir, output_dir_filtered,
+                    paste0(my_prefix, "_", output_proteome_data))
+        after_normalization_path <- file.path(output_dir, output_dir_normalized,
+                    paste0(my_prefix, "_", output_proteome_data))
+        after_imputation_path <- file.path(output_dir, output_dir_imputed,
+                    paste0(my_prefix, "_", output_proteome_data))
         plot_dir <- file.path(output_dir, output_dir_plots)
         prot_plots(before_filter_path, after_filter_path, after_normalization_path,
-        after_imputation_path, conditions_new_sample_names_path, plot_dir, "prot")
+                after_imputation_path, conditions_new_sample_names_path, plot_dir, "prot", my_prefix)
     }
 
     # For proteins
     if ( pipeline_mode == "both" || pipeline_mode == "pep" ){
-        before_filter_path <- file.path(output_dir, output_dir_new_names, output_peptidome_data)
-        after_filter_path <- file.path(output_dir, output_dir_filtered, output_peptidome_data)
-        after_normalization_path <- file.path(output_dir, output_dir_normalized, output_peptidome_data)
-        after_imputation_path <- file.path(output_dir, output_dir_imputed, output_peptidome_data)
+        before_filter_path <- file.path(output_dir, output_dir_new_names,
+                    paste0(my_prefix, "_", output_peptidome_data))
+        after_filter_path <- file.path(output_dir, output_dir_filtered,
+                    paste0(my_prefix, "_", output_peptidome_data))
+        after_normalization_path <- file.path(output_dir, output_dir_normalized,
+                    paste0(my_prefix, "_", output_peptidome_data))
+        after_imputation_path <- file.path(output_dir, output_dir_imputed,
+                    paste0(my_prefix, "_", output_peptidome_data))
         plot_dir <- file.path(output_dir, output_dir_plots)
-        prot_plots(before_filter_path, after_filter_path, after_normalization_path, after_imputation_path, conditions_new_sample_names_path, plot_dir, "pep")
+        prot_plots(before_filter_path, after_filter_path, after_normalization_path, after_imputation_path,
+                conditions_new_sample_names_path, plot_dir, "pep", my_prefix)
     }
 
     if ( pipeline_mode == "both" ){
-        after_filter_path = file.path(output_dir, "data_before_normalization.txt")
-        after_normalization_path <- file.path(output_dir, "data_after_normalization.txt")
-        after_imputation_path <- file.path(output_dir, output_both_data)
-        concat_plots(after_filter_path, after_normalization_path, after_imputation_path, conditions_new_sample_names_path, plot_dir, "both")
+        after_filter_path = file.path(output_dir,
+            paste0(my_prefix, "_data_before_normalization.txt"))
+        after_normalization_path <- file.path(output_dir,
+            paste0(my_prefix, "_data_after_normalization.txt"))
+        after_imputation_path <- file.path(output_dir, 
+            paste0(my_prefix, "_", output_both_data))
+        concat_plots(after_filter_path, after_normalization_path, after_imputation_path,
+        conditions_new_sample_names_path, plot_dir, "both", my_prefix)
     }
 
 }

@@ -1,7 +1,7 @@
 # source("rf_impute.r")
 
 
-prot_impute <- function (prot_path, output_path, imputation_method, k=10, rowmax=0.4, colmax=0.8){
+prot_impute <- function (prot_path, output_path, imputation_method, k=10, rowmax=0.4, colmax=0.8, my_prefix=""){
     message("")
     message(paste("Imputation method:", imputation_method) )
     if ( imputation_method=="knn" || imputation_method=="rf" ){
@@ -53,7 +53,9 @@ prot_impute <- function (prot_path, output_path, imputation_method, k=10, rowmax
 # 2) It concatenates both data files into "data_before_normalization.txt"
 # 3) It normalize it into "data_after_normalization.txt"
 # 4) It imputes it into output_both_data file
-concate_normalize_and_impute <- function(prot_data_path, pep_data_path, prot_annotations_path, pep_annotations_path, output_dir, output_both_data, conditions_new_sample_names_path, norm_method, imputation_method, k=10, rowmax=0.4, colmax=0.8){
+concate_normalize_and_impute <- function(prot_data_path, pep_data_path, prot_annotations_path,
+            pep_annotations_path, output_dir, output_both_data, conditions_new_sample_names_path, norm_method,
+            imputation_method, k=10, rowmax=0.4, colmax=0.8, my_prefix=""){
     df_prot_annot = read.csv(prot_annotations_path, sep="\t")
     df_pep_annot = read.csv(pep_annotations_path, sep="\t")
     df_prot_annot$Origin = "prot"

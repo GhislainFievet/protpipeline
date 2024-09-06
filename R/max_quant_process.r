@@ -4,7 +4,9 @@
 #
 # Build annotation file with new names
 
-prot_max_quant_process <- function ( proteinGroups_path, conditions_path, output_prot_file, samples__old_names__new_names_file, prot_annotations_path, remove_reverse_identified_contaminant=TRUE ){
+prot_max_quant_process <- function ( proteinGroups_path, conditions_path, output_prot_file,
+        samples__old_names__new_names_file, prot_annotations_path, remove_reverse_identified_contaminant=TRUE,
+        my_prefix=""){
     df_prot <- read.csv(proteinGroups_path, sep="\t")
     df_annotations <- read.csv(conditions_path, sep="\t")
 

@@ -1,4 +1,4 @@
-rf_imput <- function(df, ntree=100, k = 10, rowmax = 0.4, colmax = 0.8) {
+rf_imput <- function(df, ntree=100, k = 10, rowmax = 0.4, colmax = 0.8, my_prefix="") {
     message("This function imputates missing data with knn impute then Random Forest, and compute some accuracy metrics.")
     message("")
     message("    Input:")

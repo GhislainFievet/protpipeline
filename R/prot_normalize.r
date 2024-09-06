@@ -1,5 +1,5 @@
 
-prot_normalize <- function(prot_path, output_path, conditions_path, norm_method){
+prot_normalize <- function(prot_path, output_path, conditions_path, norm_method, my_prefix){
     message("")
     message( paste("Normalization method:", norm_method) )
     message("")
