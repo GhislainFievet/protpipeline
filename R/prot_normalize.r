@@ -14,12 +14,12 @@ prot_normalize <- function(prot_path, output_path, conditions_path, norm_method,
 
     mat_norm <- se_after_filter@assays@data[[1]]
 
-    if ( norm_method == "vsn" || norm_method == "vsn+quantiles" ){
+    if ( norm_method == "vsn" ){
         norm_vsn <- normalize_vsn(se_after_filter)
         mat_norm <- norm_vsn@assays@data[[1]]
     }
 
-    if ( norm_method == "quantiles" || norm_method == "vsn+quantiles" ){
+    if ( norm_method == "quantiles" ){
         dataNormVSn <- as.data.frame(mat_norm)
         mat_norm <- normalize.quantiles(as.matrix(dataNormVSn), copy=FALSE)
     }
@@ -50,8 +50,6 @@ prot_normalize <- function(prot_path, output_path, conditions_path, norm_method,
     message(paste0("Writing ", output_path, " file"))
     write.table( mat_norm, output_path, sep="\t", append=F, quote=F )
     }
-
-
 
     return(mat_norm)
 }

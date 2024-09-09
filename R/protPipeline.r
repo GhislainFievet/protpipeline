@@ -11,13 +11,18 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
 
     conditions_path = args$conditions_path
     thresholds_path = args$thresholds_path
+    group_threshold_mode = args$group_threshold_mode
+    group_threshold = args$group_threshold
+    MNAR_filter = args$MNAR_filter
+    MNAR_threshold = args$MNAR_threshold
+
     proteinGroups_path = file.path(max_quant_dir, args$proteinGroups_path)
     peptides_path = file.path(max_quant_dir, args$peptides_path)
 
     # pipeline_mode
     pipeline_mode = args$pipeline_mode
 
-    filter = args$filter
+    # filter = args$filter
     atLeastOne = args$atLeastOne
     remove_reverse_identified_contaminant = args$remove_reverse_identified_contaminant
     peptide_occurence_filter = args$peptide_occurence_filter
@@ -89,7 +94,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     output_dir_list <- list.dirs(output_dir, full.names = FALSE, recursive = FALSE)
 
     # Get date and time (with seconds) for new folder
-    my_prefix <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
+    my_prefix <- format(Sys.time(), "%Y%m%d_%H%M%S")
     new_prot_dir <- paste0("pipe_results", "_", my_prefix)
     output_dir <- file.path(output_dir, new_prot_dir)
     dir.create(output_dir, recursive = TRUE)
@@ -146,29 +151,46 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     if ( pipeline_mode == "both" || pipeline_mode == "prot"){
         data_filtered_path <- file.path(output_dir,output_dir_filtered, 
                     paste0(my_prefix, "_", output_proteome_data))
-        message(data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, data_filtered_path, atLeastOne, my_prefix)
-        df_prot_filtered <- prot_filter(data_new_sample_names_path, conditions_new_sample_names_path,
-                                thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        message(data_new_sample_names_path, conditions_new_sample_names_path,
+                    thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        df_prot_filtered <- prot_filter(data_new_sample_names_path,
+                    conditions_new_sample_names_path, thresholds_path,
+                    data_filtered_path, atLeastOne, my_prefix, group_threshold_mode,
+                    group_threshold)
     }
 
     # For peptides
     if ( pipeline_mode == "pep"){
         pep_data_filtered_path <- file.path(output_dir,output_dir_filtered,
                     paste0(my_prefix, "_", output_peptidome_data))
-        message(pep_data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, data_filtered_path, atLeastOne, my_prefix)
-        df_pep_filtered <- pep_filter(pep_data_new_sample_names_path, conditions_new_sample_names_path,
-                                thresholds_path, pep_annotations_path, pep_data_filtered_path,
-                                peptide_occurence_filter, atLeastOne, my_prefix)
+        message(pep_data_new_sample_names_path, conditions_new_sample_names_path,
+                    thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        df_pep_filtered <- pep_filter(pep_data_new_sample_names_path,
+                    conditions_new_sample_names_path, thresholds_path,
+                    pep_annotations_path, pep_data_filtered_path,
+                    peptide_occurence_filter, atLeastOne, my_prefix,
+                    group_threshold_mode, group_threshold)
     }
     if ( pipeline_mode == "both"){
         pep_data_filtered_path <- file.path(output_dir,output_dir_filtered,
                     paste0(my_prefix, "_", output_peptidome_data))
-        message(pep_data_new_sample_names_path, conditions_new_sample_names_path, thresholds_path, data_filtered_path, atLeastOne, my_prefix)
-        df_pep_filtered <- pep_filter_both(pep_data_new_sample_names_path, data_filtered_path,
-                                conditions_new_sample_names_path, thresholds_path, pep_annotations_path, prot_annotations_path,
-                                pep_data_filtered_path, peptide_occurence_filter, atLeastOne, my_prefix)
+        message(pep_data_new_sample_names_path, conditions_new_sample_names_path,
+                    thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        df_pep_filtered <- pep_filter_both(pep_data_new_sample_names_path,
+                    data_filtered_path, conditions_new_sample_names_path,
+                    thresholds_path, pep_annotations_path, prot_annotations_path,
+                    pep_data_filtered_path, peptide_occurence_filter, atLeastOne,
+                    my_prefix, group_threshold_mode, group_threshold)
     }
 
+    if ( (pipeline_mode == "both" || pipeline_mode == "prot") && MNAR_filter){
+        data_filtered_path <- file.path(output_dir, output_dir_filtered,
+                    paste0(my_prefix, "_prot_mnar.txt"))
+        message(data_new_sample_names_path, conditions_new_sample_names_path,
+                    thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        df_prot_mnar_filtered <- prot_mnar_filter(data_new_sample_names_path,
+                    conditions_new_sample_names_path, my_prefix, MNAR_threshold)
+    }
 
     ###### Normalization ######
     # For proteins

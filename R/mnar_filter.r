@@ -1,17 +1,18 @@
 
-prot_filter <- function (prot_path, conditions_path, thresholds_path, output_path,
-        atLeastOne=TRUE, my_prefix="", group_threshold_mode, group_threshold){
+prot_mnar_filter <- function (prot_path, conditions_path, my_prefix, MNAR_threshold){
     df_prot = read.csv(prot_path, sep="\t")
     
     df_conditions = read.csv(conditions_path, sep="\t")
-    if ( group_threshold_mode == "file"){
-        df_thresholds = read.csv(thresholds_path, sep="\t")
-    } else {
-        df_thresholds = data.frame(matrix(ncol=length(unique(df_conditions$condition)), nrow=1))
-        colnames(df_thresholds) = unique(df_conditions$condition)
-        for ( i in 1:unique(df_conditions$condition) ){
-            df_thresholds[1,i] = sum(df_conditions$condition == unique(df_conditions$condition)[i])*group_threshold
-        }
+
+    df_thresholds_inf = data.frame(matrix(ncol=length(unique(df_conditions$condition)), nrow=1))
+    colnames(df_thresholds_inf) = unique(df_conditions$condition)
+    for ( i in 1:unique(df_conditions$condition) ){
+        df_thresholds_inf[1,i] = sum(df_conditions$condition == unique(df_conditions$condition)[i])*MNAR_threshold
+    }
+    df_thresholds_sup = data.frame(matrix(ncol=length(unique(df_conditions$condition)), nrow=1))
+    colnames(df_thresholds_sup) = unique(df_conditions$condition)
+    for ( i in 1:unique(df_conditions$condition) ){
+        df_thresholds_sup[1,i] = sum(df_conditions$condition == unique(df_conditions$condition)[i])*(1-MNAR_threshold)
     }
 
     # Create samples.in.conditions, make columns list by condition
@@ -21,20 +22,16 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
         samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
     }
 
-    condition.filter <- sapply(colnames(df_thresholds), function(x) {
-        # print(x)
-        # print(colnames(df_prot))
-        # print(samples.in.conditions[[x]])
-
-        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
+    condition.filter_inf <- sapply(colnames(df_thresholds), function(x) {
+        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) <= df_thresholds_inf[1,x])
     })
-    df_cf = as.data.frame(condition.filter)
+    condition.filter_sup <- sapply(colnames(df_thresholds), function(x) {
+        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds_sup[1,x])
+    })
 
-    keepProt <- if(atLeastOne) {
-        apply( condition.filter, 1, any )
-    } else {
-        apply( condition.filter, 1, all )
-    }
+    keepProt_inf <- apply( condition.filter_inf, 1, any )
+    keepProt_sup <- apply( condition.filter_sup, 1, any )
+    keepProt <- keepProt_inf & keepProt_sup
 
     prot_final <- df_prot[keepProt,]
 
@@ -44,11 +41,11 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
     return(prot_final)
 }
 
-pep_filter <- function (prot_path, conditions_path,
+pep_mnar_filter <- function (prot_path, conditions_path,
                 thresholds_path, pep_annotations_path,
                 output_path, peptide_occurence_filter=1,
                 atLeastOne=TRUE, my_prefix="", group_threshold_mode,
-                group_threshold){
+                group_threshold, MNAR_threshold, MNAR_filter){
     message(paste(prot_path, conditions_path, thresholds_path, pep_annotations_path))
     df_prot = read.csv(prot_path, sep="\t")
     df_conditions = read.csv(conditions_path, sep="\t")
@@ -76,8 +73,7 @@ pep_filter <- function (prot_path, conditions_path,
         # print(samples.in.conditions[[x]])
         apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
     })
-    df_cf = as.data.frame(condition.filter)
-
+    
     keepProt <- if(atLeastOne) {
         apply( condition.filter, 1, any )
     } else {
@@ -117,10 +113,10 @@ pep_filter <- function (prot_path, conditions_path,
     return(prot_final)
 }
 
-pep_filter_both <- function (pep_path, prot_path, conditions_path,
+pep_mnar_filter_both <- function (pep_path, prot_path, conditions_path,
         thresholds_path, pep_annotations_path, prot_annotations_path,
         output_path, peptide_occurence_filter=1, atLeastOne=TRUE, my_prefix="",
-        group_threshold_mode, group_threshold){
+        group_threshold_mode, group_threshold, MNAR_threshold, MNAR_filter){
     message(paste(pep_path, prot_path, conditions_path, thresholds_path, pep_annotations_path, prot_annotations_path))
     df_pep = read.csv(pep_path, sep="\t")
     df_prot = read.csv(prot_path, sep="\t")
@@ -147,8 +143,7 @@ pep_filter_both <- function (pep_path, prot_path, conditions_path,
         # print(samples.in.conditions[[x]])
         apply(as.matrix(df_pep[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
     })
-    df_cf = as.data.frame(condition.filter)
-
+    
     keepProt <- if(atLeastOne) {
         apply( condition.filter, 1, any )
     } else {
