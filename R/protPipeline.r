@@ -229,27 +229,23 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     k <- 0
     rowmax <- 0
     colmax <- 0
-
     if ( imputation_method == "knn"){
         k <- knn_k
         rowmax <- knn_rowmax
         colmax <- knn_colmax
     }
-
     if ( imputation_method == "rf"){
         k <- rf_knn_k
         rowmax <- rf_knn_rowmax
         colmax <- rf_knn_colmax
     }
-
-    # For proteins
     impute_output_path <- file.path(output_dir, output_dir_imputed,
                 paste0(my_prefix, "_", output_proteome_data))
     partial_impute_output_path <- file.path(output_dir, output_dir_imputed,
                 paste0(my_prefix, "_partialImpute_", output_proteome_data))
     prot_impute <- prot_impute(norm_output_path, impute_output_path, partial_impute_output_path,
             imputation_method, k=k, rowmax=rowmax, colmax=colmax, MNAR_filter,
-            thresholds_path, group_threshold_mode, group_threshold)
+            thresholds_path, group_threshold_mode, group_threshold, my_seed, conditions_path)
 
 
 
