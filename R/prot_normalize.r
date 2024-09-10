@@ -1,14 +1,14 @@
-normalize_filter_folder <- function(filter_folder_path, output_path, norm_method, my_prefix){
+normalize_filter_folder <- function(filter_folder_path, output_path, norm_method){
     message("")
     message("Normalizing and filtering all files in folder")
     message("")
 
     list_files <- list.files(filter_folder_path, full.names=TRUE)
-    # cbind all files in list_files
+    # rbind all files in list_files
     df <- read.csv(list_files[1], sep="\t")
     for (file in list_files[2:length(list_files)]){
         df_temp = read.csv(file, sep="\t")
-        df = cbind(df, df_temp)
+        df = rbind(df, df_temp)
     }
 
     if ( norm_method == "quantiles" ){
