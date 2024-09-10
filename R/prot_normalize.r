@@ -1,3 +1,23 @@
+normalize_filter_folder <- function(filter_folder_path, output_path, norm_method, my_prefix){
+    message("")
+    message("Normalizing and filtering all files in folder")
+    message("")
+
+    list_files <- list.files(filter_folder_path, full.names=TRUE)
+    # cbind all files in list_files
+    df <- read.csv(list_files[1], sep="\t")
+    for (file in list_files[2:length(list_files)]){
+        df_temp = read.csv(file, sep="\t")
+        df = cbind(df, df_temp)
+    }
+
+    if ( norm_method == "quantiles" ){
+        mat_norm <- normalize.quantiles(as.matrix(df), copy=FALSE)
+        message(paste0("Writing ", output_path, " file"))
+        write.table(mat_norm, output_path, sep="\t", append=F, quote=F)
+    }
+}
+
 
 prot_normalize <- function(prot_path, output_path, conditions_path, norm_method, my_prefix){
     message("")

@@ -184,12 +184,36 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     }
 
     if ( (pipeline_mode == "both" || pipeline_mode == "prot") && MNAR_filter){
-        data_filtered_path <- file.path(output_dir, output_dir_filtered,
+        prot_mnar_filtered_path <- file.path(output_dir, output_dir_filtered,
                     paste0(my_prefix, "_prot_mnar.txt"))
-        message(data_new_sample_names_path, conditions_new_sample_names_path,
-                    thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        message(data_new_sample_names_path,
+                    conditions_new_sample_names_path,
+                    data_filtered_path, MNAR_threshold)
         df_prot_mnar_filtered <- prot_mnar_filter(data_new_sample_names_path,
-                    conditions_new_sample_names_path, my_prefix, MNAR_threshold)
+                    conditions_new_sample_names_path,
+                    prot_mnar_filtered_path, MNAR_threshold)
+    }
+    # For peptides
+    if ( pipeline_mode == "pep" && MNAR_filter){
+        pep_data_filtered_path <- file.path(output_dir,output_dir_filtered,
+                    paste0(my_prefix, "_pep_mnar.txt"))
+        message(pep_data_new_sample_names_path, conditions_new_sample_names_path,
+                    thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        df_pep_filtered <- pep_mnar_filter(pep_data_new_sample_names_path,
+                    conditions_new_sample_names_path, 
+                    pep_annotations_path, pep_data_filtered_path,
+                    peptide_occurence_filter, MNAR_threshold)
+    }
+    if ( pipeline_mode == "both" && MNAR_filter){
+        pep_data_filtered_path <- file.path(output_dir,output_dir_filtered,
+                    paste0(my_prefix, "_pep_mnar.txt"))
+        message(pep_data_new_sample_names_path, conditions_new_sample_names_path,
+                    thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+        df_pep_filtered <- pep_mnar_filter_both(pep_data_new_sample_names_path,
+                    data_filtered_path,
+                    conditions_new_sample_names_path,
+                    pep_annotations_path, prot_annotations_path,
+                    pep_data_filtered_path, peptide_occurence_filter, MNAR_threshold)
     }
 
     ###### Normalization ######
@@ -283,13 +307,13 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
 
     if ( pipeline_mode == "both" ){
         after_filter_path = file.path(output_dir,
-            paste0(my_prefix, "_data_before_normalization.txt"))
+            paste0("data_before_normalization.txt"))
         after_normalization_path <- file.path(output_dir,
-            paste0(my_prefix, "_data_after_normalization.txt"))
+            paste0("data_after_normalization.txt"))
         after_imputation_path <- file.path(output_dir, 
-            paste0(my_prefix, "_", output_both_data))
+            paste0(output_both_data))
         concat_plots(after_filter_path, after_normalization_path, after_imputation_path,
-        conditions_new_sample_names_path, plot_dir, "both", my_prefix)
+        conditions_new_sample_names_path, plot_dir, "both", my_prefix, output_dir)
     }
 
 }
