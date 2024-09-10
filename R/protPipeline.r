@@ -9,6 +9,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     library(yaml)
     args = read_yaml(yaml_config_file)
 
+    my_seed = args$seed
     conditions_path = args$conditions_path
     thresholds_path = args$thresholds_path
     group_threshold_mode = args$group_threshold_mode
@@ -217,21 +218,11 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     }
 
     ###### Normalization ######
-    # For proteins
-    if ( pipeline_mode == "both" || pipeline_mode == "prot"){
-        norm_output_path <- file.path(output_dir,output_dir_normalized,
-                    paste0(my_prefix, "_", output_proteome_data))
-        df_prot_normalized <- prot_normalize(data_filtered_path, norm_output_path, conditions_new_sample_names_path,
-                        prot_norm_method, my_prefix)
-    }
-    # For peptides
-    if ( pipeline_mode == "both" || pipeline_mode == "pep"){
-        pep_norm_output_path <- file.path(output_dir,output_dir_normalized,
-                    paste0(my_prefix, "_", output_peptidome_data))
-        df_pep_normalized <- prot_normalize(pep_data_filtered_path, pep_norm_output_path,
-                        conditions_new_sample_names_path, pep_norm_method, my_prefix)
-    }
-
+    filter_folder_path <- file.path(output_dir,output_dir_filtered)
+    norm_output_path <- file.path(output_dir,output_dir_normalized,
+                paste0(my_prefix, "_", output_proteome_data))
+    normalize_filter_folder(filter_folder_path, norm_output_path, norm_method)
+    
 
     ###### Imputation of missing values ######
     # determine parameters for knn impute if needed
@@ -252,26 +243,14 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     }
 
     # For proteins
-    if ( pipeline_mode == "prot" ){
-        impute_output_path <- file.path(output_dir, output_dir_imputed,
-                    paste0(my_prefix, "_", output_proteome_data))
-        prot_impute <- prot_impute(norm_output_path, impute_output_path, imputation_method, k=k,
-                            rowmax=rowmax, colmax=colmax, my_prefix)
-    }
-    # For peptides
-    if ( pipeline_mode == "pep"){
-        pep_impute_output_path <- file.path(output_dir, output_dir_imputed,
-                    paste0(my_prefix, "_", output_peptidome_data))
-        pep_impute <- prot_impute(pep_norm_output_path, pep_impute_output_path, imputation_method, k=k,
-                            rowmax=rowmax, colmax=colmax, my_prefix)
-    }
-    # For proteins + peptides
-    if ( pipeline_mode == "both" ){
-        impute_both <- concate_normalize_and_impute(data_filtered_path, pep_data_filtered_path,
-                            prot_annotations_path, pep_annotations_path, output_dir, output_both_data,
-                            conditions_new_sample_names_path, both_norm_method, imputation_method, k=k,
-                            rowmax=rowmax, colmax=colmax, my_prefix)
-    }
+    impute_output_path <- file.path(output_dir, output_dir_imputed,
+                paste0(my_prefix, "_", output_proteome_data))
+    partial_impute_output_path <- file.path(output_dir, output_dir_imputed,
+                paste0(my_prefix, "_partialImpute_", output_proteome_data))
+    prot_impute <- prot_impute(norm_output_path, impute_output_path, partial_impute_output_path,
+            imputation_method, k=k, rowmax=rowmax, colmax=colmax, MNAR_filter,
+            thresholds_path, group_threshold_mode, group_threshold)
+
 
 
     ###### Plots ######

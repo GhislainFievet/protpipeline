@@ -12,7 +12,7 @@ normalize_filter_folder <- function(filter_folder_path, output_path, norm_method
     }
 
     if ( norm_method == "quantiles" ){
-        mat_norm <- normalize.quantiles(as.matrix(df), copy=FALSE)
+        mat_norm <- preprocessCore::normalize.quantiles(as.matrix(df), copy=FALSE)
         message(paste0("Writing ", output_path, " file"))
         write.table(mat_norm, output_path, sep="\t", append=F, quote=F)
     }

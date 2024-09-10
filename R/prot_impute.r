@@ -1,7 +1,7 @@
 # source("rf_impute.r")
 
-
-prot_impute <- function (prot_path, output_path, imputation_method, k=10, rowmax=0.4, colmax=0.8, my_prefix=""){
+prot_impute <- function (prot_path, output_path, output_partial_path, imputation_method, k=10, rowmax=0.4,
+            colmax=0.8, MNAR_filter, thresholds_path, group_threshold_mode, group_threshold, my_seed){
     message("")
     message(paste("Imputation method:", imputation_method) )
     if ( imputation_method=="knn" || imputation_method=="rf" ){
@@ -22,13 +22,29 @@ prot_impute <- function (prot_path, output_path, imputation_method, k=10, rowmax
 
     # Imputation with random forest
     if (imputation_method == "rf"){
-        df_result <- rf_imput(df_norm_quant)$data
+        set.seed(my_seed)
+        df_result <- rf_imput(df_norm_quant[,grep("mnar", colnames(df_norm_quant), invert=T)])$data
+        set.seed(my_seed)
+        df_result_full <- rf_imput(df_norm_quant)$data
     }
+
+    df_conditions = read.csv(conditions_path, sep="\t")
+    if ( group_threshold_mode == "file"){
+        df_thresholds = read.csv(thresholds_path, sep="\t")
+    } else {
+        df_thresholds = data.frame(matrix(ncol=length(unique(df_conditions$condition)), nrow=1))
+        colnames(df_thresholds) = unique(df_conditions$condition)
+        for ( i in 1:unique(df_conditions$condition) ){
+            df_thresholds[1,i] = sum(df_conditions$condition == unique(df_conditions$condition)[i])*group_threshold
+        }
+    }
+
+    # Add removed proteins
 
     # Imputation with knn
     if (imputation_method == "knn"){
         library(impute)
-        
+        set.seed(my_seed)
         mat <- as.matrix(df_norm_quant)
         mat <- ifelse( mat == 'NA', NA, mat )
         mat <- ifelse( mat == '', NA, mat )
@@ -41,8 +57,22 @@ prot_impute <- function (prot_path, output_path, imputation_method, k=10, rowmax
         df_result <- df_knn_imput
     }
 
+    for ( cond in unique(df_conditions$condition) ){
+        cond_mask <- apply(t(df_norm_quant), 1, function(x){
+            length(which(!is.na(x[df_conditions[df_conditions$condition == cond, "new_name"]]))) < df_thresholds[1,cond]
+        })
+        df_result_full[df_conditions[df_conditions$condition == cond, "new_name"], cond_mask] <- 
+            df_norm_quant[df_conditions[df_conditions$condition == cond, "new_name"], cond_mask]
+    }
+
+
+
+
+
+
     message(paste0("Writing ", output_path, " file"))
     write.table(t(df_result), file=output_path, sep="\t", append=F, quote=F)
+    write.table(t(df_result_full), file=output_partial_path, sep="\t", append=F, quote=F)
 
     return(t(df_result))
 }
