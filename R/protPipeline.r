@@ -216,13 +216,13 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     }
 
     ###### Normalization ######
-    filter_folder_path <- file.path(output_dir,output_dir_filtered)
-    norm_output_path <- file.path(output_dir,output_dir_normalized,
+    filter_folder_path <- file.path(output_dir, output_dir_filtered)
+    norm_output_path <- file.path(output_dir, output_dir_normalized,
                 paste0(my_prefix, "_prot_pep.txt"))
     normalize_filter_folder(filter_folder_path, norm_output_path, norm_method,
-                output_proteome_data, output_peptidome_data, my_prefix)
+                output_proteome_data, output_peptidome_data, my_prefix,
+                output_dir, output_dir_normalized)
     
-
     ###### Imputation of missing values ######
     # determine parameters for knn impute if needed
     k <- 0
@@ -247,8 +247,6 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
             imputation_method, k=k, rowmax=rowmax, colmax=colmax, MNAR_filter,
             thresholds_path, group_threshold_mode, group_threshold,
             my_seed, conditions_path)
-
-
 
     ###### Plots ######
     # For proteins
