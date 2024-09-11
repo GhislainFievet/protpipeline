@@ -13,6 +13,8 @@ normalize_filter_folder <- function(filter_folder_path, output_path, norm_method
         df = rbind(df, df_temp)
     }
 
+    df <- log2(df)
+
     if ( norm_method == "quantiles" ){
         mat_norm <- preprocessCore::normalize.quantiles(as.matrix(df), copy=FALSE)
         message(paste0("Writing ", output_path, " file"))
