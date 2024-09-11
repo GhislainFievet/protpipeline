@@ -46,16 +46,23 @@ prot_impute <- function (prot_path, output_path, output_partial_path, imputation
     if (imputation_method == "knn"){
         library(impute)
         set.seed(my_seed)
-        mat <- as.matrix(df_norm_quant)
+        mat <- as.matrix(df_norm_quant[,grep("mnar", colnames(df_norm_quant), invert=T)])
         mat <- ifelse( mat == 'NA', NA, mat )
         mat <- ifelse( mat == '', NA, mat )
-
         message("Beginning of knn imputation")
         imputed_mat <- impute.knn(mat, k=k, rowmax=rowmax, colmax=colmax)
         message("End of knn imputation")
         df_knn_imput <- as.data.frame(imputed_mat$data)
-
         df_result <- df_knn_imput
+
+        mat <- as.matrix(df_norm_quant)
+        mat <- ifelse( mat == 'NA', NA, mat )
+        mat <- ifelse( mat == '', NA, mat )
+        message("Beginning of full knn imputation")
+        imputed_mat <- impute.knn(mat, k=k, rowmax=rowmax, colmax=colmax)
+        message("End of full knn imputation")
+        df_knn_imput <- as.data.frame(imputed_mat$data)
+        df_result_full <- df_knn_imput
     }
 
     for ( cond in unique(df_conditions$condition) ){
