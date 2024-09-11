@@ -16,6 +16,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     group_threshold = args$group_threshold
     MNAR_filter = args$MNAR_filter
     MNAR_threshold = args$MNAR_threshold
+    partial_imputation = args$partial_imputation
 
     proteinGroups_path = file.path(max_quant_dir, args$proteinGroups_path)
     peptides_path = file.path(max_quant_dir, args$peptides_path)
@@ -285,8 +286,11 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
         after_filter_path = file.path(output_dir,
             paste0("data_before_normalization.txt"))
         after_normalization_path <- norm_output_path
-        after_imputation_path <- file.path(output_dir, 
-            paste0(output_both_data))
+        if ( partial_imputation ){
+            after_imputation_path <- partial_impute_output_path
+        } else {
+            after_imputation_path <- impute_output_path
+        }
         print(paste("both plots: ", plot_dir))
         concat_plots(after_filter_path, after_normalization_path, after_imputation_path,
         conditions_new_sample_names_path, plot_dir, "both", my_prefix)
