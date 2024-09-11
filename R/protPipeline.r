@@ -110,6 +110,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
         copy_files(x, max_quant_dir, file.path(output_dir, "max_quant_data"))
     })
 
+    # Copy files to the result folder output
     file.copy(yaml_config_file, file.path(output_dir, paste0(my_prefix, "_config.yaml")))
     file.copy(conditions_path, file.path(output_dir, paste0(my_prefix, "_conditions.txt")))
 
