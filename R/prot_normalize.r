@@ -14,6 +14,8 @@ normalize_filter_folder <- function(filter_folder_path, output_path, norm_method
     }
 
     df <- log2(df)
+    
+    write.table(df, file.path(output_dir, "data_before_normalization.txt"), sep="\t", append=F, quote=F)
 
     if ( norm_method == "quantiles" ){
         mat_norm <- preprocessCore::normalize.quantiles(as.matrix(df), copy=FALSE)

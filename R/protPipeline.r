@@ -284,14 +284,11 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     if ( pipeline_mode == "both" ){
         after_filter_path = file.path(output_dir,
             paste0("data_before_normalization.txt"))
-        after_normalization_path <- file.path(output_dir,
-            paste0("data_after_normalization.txt"))
+        after_normalization_path <- norm_output_path
         after_imputation_path <- file.path(output_dir, 
             paste0(output_both_data))
-        
         print(paste("both plots: ", plot_dir))
         concat_plots(after_filter_path, after_normalization_path, after_imputation_path,
         conditions_new_sample_names_path, plot_dir, "both", my_prefix)
     }
-
 }
