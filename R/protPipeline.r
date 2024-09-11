@@ -6,6 +6,9 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     #     quit()
     # }
 
+    # copy max_quant_dir folder to output_dir
+
+
     library(yaml)
     args = read_yaml(yaml_config_file)
 
@@ -98,6 +101,22 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     new_prot_dir <- paste0("pipe_results", "_", my_prefix)
     output_dir <- file.path(output_dir, new_prot_dir)
     dir.create(output_dir, recursive = TRUE)
+    dir.create(file.path(output_dir, "max_quant_data"), recursive = TRUE)
+    copy_files <- function(path) {
+        # Create full paths for source and destination
+        source_file <- file.path(source_dir, path)
+        dest_file <- file.path(dest_dir, path)
+        # Create subdirectories in destination if they don't exist
+        sub_dir <- dirname(dest_file)
+        if (!dir.exists(sub_dir)) {
+            dir.create(sub_dir, recursive = TRUE)
+        }   
+        # Copy the file
+        file.copy(source_file, dest_file)
+    }
+    files <- list.files(max_quant_dir, recursive = TRUE, full.names = FALSE)
+    sapply(files, copy_files)
+    file.copy(yaml_config_file, file.path(output_dir, paste0(prefix, "_config.yaml")))
 
     if (!dir.exists(file.path(output_dir,output_dir_filtered))){
         dir.create(file.path(output_dir,output_dir_filtered), recursive = TRUE)
