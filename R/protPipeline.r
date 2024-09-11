@@ -109,8 +109,9 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     lapply(files, function(x){
         copy_files(x, max_quant_dir, file.path(output_dir, "max_quant_data"))
     })
-    
+
     file.copy(yaml_config_file, file.path(output_dir, paste0(my_prefix, "_config.yaml")))
+    file.copy(conditions_path, file.path(output_dir, paste0(my_prefix, "_conditions.txt")))
 
     if (!dir.exists(file.path(output_dir,output_dir_filtered))){
         dir.create(file.path(output_dir,output_dir_filtered), recursive = TRUE)
