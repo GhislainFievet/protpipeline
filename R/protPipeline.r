@@ -53,9 +53,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     output_both_data = args$output_both_data
 
     # Normalisation method
-    prot_norm_method = args$prot_norm_method
-    pep_norm_method = args$pep_norm_method
-    both_norm_method = args$both_norm_method
+    norm_method = args$norm_method
 
 
     # knn.impute parameters for "knn" imputation method
