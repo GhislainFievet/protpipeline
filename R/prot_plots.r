@@ -296,7 +296,7 @@ prot_plots <- function(before_filter_path,
 
 concat_plots <- function(after_filter_path, after_normalization_path,
         after_imputation_path,
-        conditions_path, plot_dir, prot_or_pep, my_prefix, output_dir){
+        conditions_path, plot_dir, prot_or_pep, my_prefix){
     prot_or_pep_2 = "Proteins"
     prot_or_pep_3 = "proteins"
     prot_or_pep_4 = "proteins"
