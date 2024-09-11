@@ -255,6 +255,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     ###### Plots ######
     # For proteins
     if ( pipeline_mode == "both" || pipeline_mode == "prot" ){
+        print("PLOT   pipeline_mode == both || pipeline_mode == prot")
         before_filter_path <- file.path(output_dir, output_dir_new_names,
                     paste0(my_prefix, "_", output_proteome_data))
         after_filter_path <- file.path(output_dir, output_dir_filtered,
@@ -270,6 +271,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
 
     # For proteins
     if ( pipeline_mode == "both" || pipeline_mode == "pep" ){
+        print("PLOT   pipeline_mode == both || pipeline_mode == pep")
         before_filter_path <- file.path(output_dir, output_dir_new_names,
                     paste0(my_prefix, "_", output_peptidome_data))
         after_filter_path <- file.path(output_dir, output_dir_filtered,
@@ -290,7 +292,8 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
             paste0("data_after_normalization.txt"))
         after_imputation_path <- file.path(output_dir, 
             paste0(output_both_data))
-        message("both plots: ", plot_dir)
+        
+        print(paste("both plots: ", plot_dir))
         concat_plots(after_filter_path, after_normalization_path, after_imputation_path,
         conditions_new_sample_names_path, plot_dir, "both", my_prefix)
     }
