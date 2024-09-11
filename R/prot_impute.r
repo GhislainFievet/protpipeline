@@ -40,6 +40,7 @@ prot_impute <- function (prot_path, output_path, output_partial_path, imputation
     }
 
     # Add removed proteins
+    rows2add <- setdiff(colnames(df_norm_quant_nof), colnames(df_norm_quant))
 
     # Imputation with knn
     if (imputation_method == "knn"){
@@ -65,9 +66,8 @@ prot_impute <- function (prot_path, output_path, output_partial_path, imputation
             df_norm_quant[df_conditions[df_conditions$condition == cond, "new_name"], cond_mask]
     }
 
-
-
-
+    df_result <- cbind(df_result, df_norm_quant_nof[,rows2add])
+    df_result_full <- cbind(df_result_full, df_norm_quant_nof[,rows2add])
 
 
     message(paste0("Writing ", output_path, " file"))

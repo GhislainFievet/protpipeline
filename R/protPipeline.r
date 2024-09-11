@@ -220,8 +220,9 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     ###### Normalization ######
     filter_folder_path <- file.path(output_dir,output_dir_filtered)
     norm_output_path <- file.path(output_dir,output_dir_normalized,
-                paste0(my_prefix, "_", output_proteome_data))
-    normalize_filter_folder(filter_folder_path, norm_output_path, norm_method)
+                paste0(my_prefix, "_prot_pep.txt"))
+    normalize_filter_folder(filter_folder_path, norm_output_path, norm_method,
+                output_proteome_data, output_peptidome_data, my_prefix)
     
 
     ###### Imputation of missing values ######
@@ -240,12 +241,14 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
         colmax <- rf_knn_colmax
     }
     impute_output_path <- file.path(output_dir, output_dir_imputed,
-                paste0(my_prefix, "_", output_proteome_data))
+                paste0(my_prefix, "_prot_pep.txt"))
     partial_impute_output_path <- file.path(output_dir, output_dir_imputed,
-                paste0(my_prefix, "_partialImpute_", output_proteome_data))
-    prot_impute <- prot_impute(norm_output_path, impute_output_path, partial_impute_output_path,
+                paste0(my_prefix, "_partialImpute_prot_pep.txt"))
+    prot_impute <- prot_impute(norm_output_path, impute_output_path,
+            partial_impute_output_path,
             imputation_method, k=k, rowmax=rowmax, colmax=colmax, MNAR_filter,
-            thresholds_path, group_threshold_mode, group_threshold, my_seed, conditions_path)
+            thresholds_path, group_threshold_mode, group_threshold,
+            my_seed, conditions_path)
 
 
 

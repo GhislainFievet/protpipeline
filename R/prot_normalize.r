@@ -1,4 +1,6 @@
-normalize_filter_folder <- function(filter_folder_path, output_path, norm_method){
+normalize_filter_folder <- function(filter_folder_path, output_path, norm_method,
+                    output_proteome_data, output_peptidome_data, my_prefix,
+                    output_dir, output_dir_normalized){
     message("")
     message("Normalizing and filtering all files in folder")
     message("")
@@ -16,6 +18,19 @@ normalize_filter_folder <- function(filter_folder_path, output_path, norm_method
         message(paste0("Writing ", output_path, " file"))
         write.table(mat_norm, output_path, sep="\t", append=F, quote=F)
     }
+
+    norm_output_path <- file.path(output_dir, output_dir_normalized,
+                paste0(my_prefix, "_prot_mnar.txt"))
+    write.table(mat_norm[grep("//mnar_prot//", rownames(mat_norm)),], norm_output_path, sep="\t", append=F, quote=F)
+    norm_output_path <- file.path(output_dir, output_dir_normalized,
+                paste0(my_prefix, "_pep_mnar.txt"))
+    write.table(mat_norm[grep("//mnar_pep//", rownames(mat_norm)),], norm_output_path, sep="\t", append=F, quote=F)
+    norm_output_path <- file.path(output_dir, output_dir_normalized,
+                paste0(my_prefix, "_", output_proteome_data))
+    write.table(mat_norm[grep("//prot//", rownames(mat_norm)),], norm_output_path, sep="\t", append=F, quote=F)
+    norm_output_path <- file.path(output_dir, output_dir_normalized,
+                paste0(my_prefix, "_", output_peptidome_data))
+    write.table(mat_norm[grep("//pep//", rownames(mat_norm)),], norm_output_path, sep="\t", append=F, quote=F)
 }
 
 
