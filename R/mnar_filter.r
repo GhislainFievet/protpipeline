@@ -1,8 +1,6 @@
 
 prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_threshold, prot_filter_path){
-    message(MNAR_threshold)
-    message(class(MNAR_threshold))
-    message(as.numeric(MNAR_threshold))
+    print("prot_mnar_filter")
     df_prot = read.csv(prot_path, sep="\t")
     
     df_conditions = read.csv(conditions_path, sep="\t")
@@ -27,11 +25,13 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
         samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
     }
 
+    print(df_thresholds_inf)
+    print(df_thresholds_sup)
     condition.filter_inf <- sapply(colnames(df_thresholds_inf), function(x) {
-        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) < df_thresholds_inf[1,x])
+        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) <= df_thresholds_inf[1,x])
     })
     condition.filter_sup <- sapply(colnames(df_thresholds_sup), function(x) {
-        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) > df_thresholds_sup[1,x])
+        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds_sup[1,x])
     })
 
     keepProt_inf <- apply( condition.filter_inf, 1, any )
