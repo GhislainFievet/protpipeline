@@ -15,12 +15,14 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
         }
     }
 
+    samples.in.conditions = c()
+    for ( cond in unique(df_conditions$condition) ){
+        samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
+    }
+
     if ( group_threshold_mode == "by_group" || group_threshold_mode == "file"){
             # Create samples.in.conditions, make columns list by condition
-            samples.in.conditions = c()
-            for ( cond in unique(df_conditions$condition) ){
-                samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
-            }
+
             condition.filter <- sapply(colnames(df_thresholds), function(x) {
                 # print(x)
                 # print(colnames(df_prot))
@@ -82,14 +84,15 @@ pep_filter <- function (prot_path, conditions_path,
         }
     }
     df_annot = read.csv(pep_annotations_path, sep="\t")
+    # Create samples.in.conditions, make columns list by condition
+    samples.in.conditions = c()
+
+    for ( cond in unique(df_conditions$condition) ){
+        samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
+    }
 
     if ( group_threshold_mode == "by_group" || group_threshold_mode == "file"){
-        # Create samples.in.conditions, make columns list by condition
-        samples.in.conditions = c()
 
-        for ( cond in unique(df_conditions$condition) ){
-            samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
-        }
 
         condition.filter <- sapply(colnames(df_thresholds), function(x) {
             # print(x)
