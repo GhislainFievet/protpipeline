@@ -17,6 +17,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     thresholds_path = args$thresholds_path
     group_threshold_mode = args$group_threshold_mode
     group_threshold = args$group_threshold
+    global_threshold = args$global_threshold
     MNAR_filter = args$MNAR_filter
     MNAR_threshold = args$MNAR_threshold
     partial_imputation = args$partial_imputation
