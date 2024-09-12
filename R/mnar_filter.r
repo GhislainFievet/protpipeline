@@ -45,6 +45,8 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
     max_4mnar = 100*(1-MNAR_threshold)
     min_4mnar = 100*MNAR_threshold
 
+    print(df_conditions)
+
     mnar_mask = apply(df_prot,1,function(x){
         max_ok = FALSE
         min_ok = FALSE
