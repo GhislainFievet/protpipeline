@@ -56,6 +56,8 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
             not_na = sum(!is.na(x[df_conditions[df_conditions$condition==str_group, "new_name"]]))
             proport = (not_na / max_length)*100
     #         display(proport)
+    print(proport)
+    print(min_4mnar)
             if (proport <= min_4mnar){
                 min_ok = TRUE
             }
