@@ -7,7 +7,7 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
     if ( group_threshold_mode == "file"){
         df_thresholds = read.csv(thresholds_path, sep="\t")
     }
-    if ( group_threshold_mode == "by_group"){
+    if ( group_threshold_mode == "by_group" || group_threshold_mode == "simple+group"){
         df_thresholds = data.frame(matrix(ncol=length(unique(df_conditions$condition)), nrow=1))
         colnames(df_thresholds) = unique(df_conditions$condition)
         for ( i in 1:length(unique(df_conditions$condition)) ){
@@ -67,13 +67,14 @@ pep_filter <- function (prot_path, conditions_path,
                 thresholds_path, pep_annotations_path,
                 output_path, peptide_occurence_filter=1,
                 atLeastOne=TRUE, my_prefix="", group_threshold_mode,
-                group_threshold){
+                group_threshold, global_threshold){
     message(paste(prot_path, conditions_path, thresholds_path, pep_annotations_path))
     df_prot = read.csv(prot_path, sep="\t")
     df_conditions = read.csv(conditions_path, sep="\t")
     if ( group_threshold_mode == "file"){
         df_thresholds = read.csv(thresholds_path, sep="\t")
-    } else {
+    }
+    if ( group_threshold_mode == "by_group" || group_threshold_mode == "simple+group"){
         df_thresholds = data.frame(matrix(ncol=length(unique(df_conditions$condition)), nrow=1))
         colnames(df_thresholds) = unique(df_conditions$condition)
         for ( i in 1:length(unique(df_conditions$condition)) ){
