@@ -42,8 +42,8 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
     keepProt <- keepProt_inf & keepProt_sup
 
 
-    max_4mnar = 100*2/3
-    min_4mnar = 100*1/3
+    max_4mnar = 100*(1-MNAR_threshold)
+    min_4mnar = 100*MNAR_threshold
 
     print(df_conditions)
 
