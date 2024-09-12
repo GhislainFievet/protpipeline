@@ -135,7 +135,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
 
     ###### Only keep LFQ.intensity.XXX samples needed ######
     # For proteins
-    if ( pipeline_mode == "both" || pipeline_mode == "prot"){
+    if ( pipeline_mode == "prot"){
         data_new_sample_names_path <- file.path(output_dir,output_dir_new_names,
                 paste0(my_prefix, "_", output_proteome_data))
         conditions_new_sample_names_path <- file.path(output_dir,
@@ -148,7 +148,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
                                 my_prefix)
     }
     # For peptides
-    if ( pipeline_mode == "both" || pipeline_mode == "pep"){
+    if ( pipeline_mode == "pep"){
         pep_data_new_sample_names_path <- file.path(output_dir,output_dir_new_names,
                 paste0(my_prefix, "_", output_peptidome_data))
         conditions_new_sample_names_path <- file.path(output_dir,
@@ -163,7 +163,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
 
     ###### Filter proteins ######
     # For proteins
-    if ( pipeline_mode == "both" || pipeline_mode == "prot"){
+    if ( pipeline_mode == "prot"){
         data_filtered_path <- file.path(output_dir,output_dir_filtered, 
                     paste0(my_prefix, "_", output_proteome_data))
         message(data_new_sample_names_path, conditions_new_sample_names_path,
@@ -186,19 +186,8 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
                     peptide_occurence_filter, atLeastOne, my_prefix,
                     group_threshold_mode, group_threshold)
     }
-    if ( pipeline_mode == "both"){
-        pep_data_filtered_path <- file.path(output_dir,output_dir_filtered,
-                    paste0(my_prefix, "_", output_peptidome_data))
-        message(pep_data_new_sample_names_path, conditions_new_sample_names_path,
-                    thresholds_path, data_filtered_path, atLeastOne, my_prefix)
-        df_pep_filtered <- pep_filter_both(pep_data_new_sample_names_path,
-                    data_filtered_path, conditions_new_sample_names_path,
-                    thresholds_path, pep_annotations_path, prot_annotations_path,
-                    pep_data_filtered_path, peptide_occurence_filter, atLeastOne,
-                    my_prefix, group_threshold_mode, group_threshold)
-    }
 
-    if ( (pipeline_mode == "both" || pipeline_mode == "prot") && MNAR_filter){
+    if ( pipeline_mode == "prot" && MNAR_filter){
         prot_mnar_filtered_path <- file.path(output_dir, output_dir_filtered,
                     paste0(my_prefix, "_prot_mnar.txt"))
         message(data_new_sample_names_path,
@@ -206,7 +195,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
                     data_filtered_path, MNAR_threshold)
         df_prot_mnar_filtered <- prot_mnar_filter(data_new_sample_names_path,
                     conditions_new_sample_names_path,
-                    prot_mnar_filtered_path, MNAR_threshold)
+                    prot_mnar_filtered_path, MNAR_threshold, data_filtered_path)
     }
     # For peptides
     if ( pipeline_mode == "pep" && MNAR_filter){
@@ -218,17 +207,6 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
                     conditions_new_sample_names_path, 
                     pep_annotations_path, pep_data_filtered_path,
                     peptide_occurence_filter, MNAR_threshold)
-    }
-    if ( pipeline_mode == "both" && MNAR_filter){
-        pep_data_filtered_path <- file.path(output_dir,output_dir_filtered,
-                    paste0(my_prefix, "_pep_mnar.txt"))
-        message(pep_data_new_sample_names_path, conditions_new_sample_names_path,
-                    thresholds_path, data_filtered_path, atLeastOne, my_prefix)
-        df_pep_filtered <- pep_mnar_filter_both(pep_data_new_sample_names_path,
-                    data_filtered_path,
-                    conditions_new_sample_names_path,
-                    pep_annotations_path, prot_annotations_path,
-                    pep_data_filtered_path, peptide_occurence_filter, MNAR_threshold)
     }
 
     ###### Normalization ######
@@ -266,8 +244,8 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
 
     ###### Plots ######
     # For proteins
-    if ( pipeline_mode == "both" || pipeline_mode == "prot" ){
-        print("PLOT   pipeline_mode == both || pipeline_mode == prot")
+    if (pipeline_mode == "prot" ){
+        print("PLOT   pipeline_mode == prot")
         before_filter_path <- file.path(output_dir, output_dir_new_names,
                     paste0(my_prefix, "_", output_proteome_data))
         after_filter_path <- file.path(output_dir, output_dir_filtered,
@@ -282,8 +260,8 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     }
 
     # For proteins
-    if ( pipeline_mode == "both" || pipeline_mode == "pep" ){
-        print("PLOT   pipeline_mode == both || pipeline_mode == pep")
+    if (pipeline_mode == "pep" ){
+        print("PLOT   pipeline_mode == pep")
         before_filter_path <- file.path(output_dir, output_dir_new_names,
                     paste0(my_prefix, "_", output_peptidome_data))
         after_filter_path <- file.path(output_dir, output_dir_filtered,
@@ -295,19 +273,5 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
         plot_dir <- file.path(output_dir, output_dir_plots)
         prot_plots(before_filter_path, after_filter_path, after_normalization_path, after_imputation_path,
                 conditions_new_sample_names_path, plot_dir, "pep", my_prefix)
-    }
-
-    if ( pipeline_mode == "both" ){
-        after_filter_path = file.path(output_dir,
-            paste0("data_before_normalization.txt"))
-        after_normalization_path <- norm_output_path
-        if ( partial_imputation ){
-            after_imputation_path <- partial_impute_output_path
-        } else {
-            after_imputation_path <- impute_output_path
-        }
-        print(paste("both plots: ", plot_dir))
-        concat_plots(after_filter_path, after_normalization_path, after_imputation_path,
-        conditions_new_sample_names_path, plot_dir, "both", my_prefix)
     }
 }

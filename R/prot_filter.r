@@ -6,7 +6,8 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
     df_conditions = read.csv(conditions_path, sep="\t")
     if ( group_threshold_mode == "file"){
         df_thresholds = read.csv(thresholds_path, sep="\t")
-    } else {
+    }
+    if ( group_threshold_mode == "by_group"){
         df_thresholds = data.frame(matrix(ncol=length(unique(df_conditions$condition)), nrow=1))
         colnames(df_thresholds) = unique(df_conditions$condition)
         for ( i in 1:length(unique(df_conditions$condition)) ){
@@ -14,26 +15,31 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
         }
     }
 
-    # Create samples.in.conditions, make columns list by condition
-    samples.in.conditions = c()
+    if ( group_threshold_mode == "by_group" || group_threshold_mode == "file"){
+            # Create samples.in.conditions, make columns list by condition
+            samples.in.conditions = c()
 
-    for ( cond in unique(df_conditions$condition) ){
-        samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
+            for ( cond in unique(df_conditions$condition) ){
+                samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
+            }
+
+            condition.filter <- sapply(colnames(df_thresholds), function(x) {
+                # print(x)
+                # print(colnames(df_prot))
+                # print(samples.in.conditions[[x]])
+
+                apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
+            })
+            df_cf = as.data.frame(condition.filter)
+
+            keepProt <- if(atLeastOne) {
+                apply( condition.filter, 1, any )
+            } else {
+                apply( condition.filter, 1, all )
+            }
     }
-
-    condition.filter <- sapply(colnames(df_thresholds), function(x) {
-        # print(x)
-        # print(colnames(df_prot))
-        # print(samples.in.conditions[[x]])
-
-        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
-    })
-    df_cf = as.data.frame(condition.filter)
-
-    keepProt <- if(atLeastOne) {
-        apply( condition.filter, 1, any )
-    } else {
-        apply( condition.filter, 1, all )
+    if ( group_threshold_mode == "simple"){
+        keepProt <- unlist(apply(df_prot, 1, function(x) length(which(is.na(x)))/length(x) <= group_threshold))
     }
 
     prot_final <- df_prot[keepProt,]
@@ -63,27 +69,32 @@ pep_filter <- function (prot_path, conditions_path,
     }
     df_annot = read.csv(pep_annotations_path, sep="\t")
 
-    # Create samples.in.conditions, make columns list by condition
-    samples.in.conditions = c()
+    if ( group_threshold_mode == "by_group" || group_threshold_mode == "file"){
+        # Create samples.in.conditions, make columns list by condition
+        samples.in.conditions = c()
 
-    for ( cond in unique(df_conditions$condition) ){
-        samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
+        for ( cond in unique(df_conditions$condition) ){
+            samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
+        }
+
+        condition.filter <- sapply(colnames(df_thresholds), function(x) {
+            # print(x)
+            # print(colnames(df_prot))
+            # print(samples.in.conditions[[x]])
+            apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
+        })
+        df_cf = as.data.frame(condition.filter)
+
+        keepProt <- if(atLeastOne) {
+            apply( condition.filter, 1, any )
+        } else {
+            apply( condition.filter, 1, all )
+        }
     }
-
-    condition.filter <- sapply(colnames(df_thresholds), function(x) {
-        # print(x)
-        # print(colnames(df_prot))
-        # print(samples.in.conditions[[x]])
-        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
-    })
-    df_cf = as.data.frame(condition.filter)
-
-    keepProt <- if(atLeastOne) {
-        apply( condition.filter, 1, any )
-    } else {
-        apply( condition.filter, 1, all )
+    if ( group_threshold_mode == "simple"){
+        keepProt <- unlist(apply(df_prot, 1, function(x) length(which(is.na(x)))/length(x) <= group_threshold))
     }
-
+    
     prot_final <- df_prot[keepProt,]
 
     prot_with_id = prot_final
