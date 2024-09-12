@@ -171,7 +171,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
         df_prot_filtered <- prot_filter(data_new_sample_names_path,
                     conditions_new_sample_names_path, thresholds_path,
                     data_filtered_path, atLeastOne, my_prefix, group_threshold_mode,
-                    group_threshold)
+                    group_threshold, global_threshold)
     }
 
     # For peptides
@@ -184,7 +184,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
                     conditions_new_sample_names_path, thresholds_path,
                     pep_annotations_path, pep_data_filtered_path,
                     peptide_occurence_filter, atLeastOne, my_prefix,
-                    group_threshold_mode, group_threshold)
+                    group_threshold_mode, group_threshold, global_threshold)
     }
 
     if ( pipeline_mode == "prot" && MNAR_filter){
