@@ -22,7 +22,7 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
     samples.in.conditions = c()
 
     for ( cond in unique(df_conditions$condition) ){
-        samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "label"]
+        samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "new_name"]
     }
 
     print(df_thresholds_inf)
