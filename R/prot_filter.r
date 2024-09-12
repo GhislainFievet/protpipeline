@@ -92,6 +92,7 @@ pep_filter <- function (prot_path, conditions_path,
         keepProt <- unlist(apply(df_prot, 1, function(x) length(which(is.na(x)))/length(x) <= global_threshold))
     }
     if ( group_threshold_mode == "simple+group"){
+        print("simple+group")
         keepProt <- unlist(apply(df_prot, 1, function(x) length(which(is.na(x)))/length(x) <= global_threshold))
         condition.filter <- sapply(colnames(df_thresholds), function(x) {
             # print(x)
@@ -99,7 +100,12 @@ pep_filter <- function (prot_path, conditions_path,
             # print(samples.in.conditions[[x]])
             apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
         })
+        print("Before keepProt")
+        print(keepProt)
+        print("After keepProt")
+        print(apply( condition.filter, 1, any ))
         keepProt <- keepProt | apply( condition.filter, 1, any )
+        print("end keepProt")
     }
 
     prot_final <- df_prot[keepProt,]
