@@ -51,6 +51,7 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
             # print(samples.in.conditions[[x]])
             apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
         })
+        print(condition.filter)
         print("Before keepProt")
         print("After keepProt")
         #print(apply( condition.filter, 1, any ))
