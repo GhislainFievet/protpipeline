@@ -5,45 +5,14 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
     
     df_conditions = read.csv(conditions_path, sep="\t")
 
-    df_thresholds_inf = data.frame(matrix(ncol=length(unique(df_conditions$condition)), nrow=1))
-    colnames(df_thresholds_inf) = unique(df_conditions$condition)
-    for ( i in 1:length(unique(df_conditions$condition)) ){
-        message(i)
-        df_thresholds_inf[1,i] = sum(df_conditions$condition == unique(df_conditions$condition)[i])*as.numeric(MNAR_threshold)
+    if (MNAR_threshold == "1/3"){
+        max_4mnar = 100*2/3
+        min_4mnar = 100/3
+    } 
+    if (is.numeric(MNAR_threshold)){
+        max_4mnar = 100*(1-MNAR_threshold)
+        min_4mnar = 100*MNAR_threshold
     }
-    df_thresholds_sup = data.frame(matrix(ncol=length(unique(df_conditions$condition)), nrow=1))
-    colnames(df_thresholds_sup) = unique(df_conditions$condition)
-    for ( i in 1:length(unique(df_conditions$condition)) ){
-        message(i)
-        df_thresholds_sup[1,i] = sum(df_conditions$condition == unique(df_conditions$condition)[i])*(1-MNAR_threshold)
-    }
-
-    # Create samples.in.conditions, make columns list by condition
-    samples.in.conditions = c()
-
-    for ( cond in unique(df_conditions$condition) ){
-        samples.in.conditions[[cond]] = df_conditions[df_conditions$condition==cond, "new_name"]
-    }
-    print(samples.in.conditions)
-    print(head(df_prot))
-    print(df_thresholds_inf)
-    print(df_thresholds_sup)
-    condition.filter_inf <- sapply(colnames(df_thresholds_inf), function(x) {
-        apply(as.matrix(df_prot[,samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) <= df_thresholds_inf[1,x])
-    })
-    condition.filter_sup <- sapply(colnames(df_thresholds_sup), function(x) {
-        apply(as.matrix(df_prot[,samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds_sup[1,x])
-    })
-
-
-
-    keepProt_inf <- apply( condition.filter_inf, 1, any )
-    keepProt_sup <- apply( condition.filter_sup, 1, any )
-    keepProt <- keepProt_inf & keepProt_sup
-
-
-    max_4mnar = 100*(1-MNAR_threshold)
-    min_4mnar = 100*MNAR_threshold
 
     print(df_conditions)
 
@@ -61,10 +30,10 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
     #         display(proport)
     print(proport)
     print(min_4mnar)
-            if (proport <= min_4mnar){
+            if (proport < min_4mnar){
                 min_ok = TRUE
             }
-            if (proport >= max_4mnar){
+            if (proport > max_4mnar){
                 max_ok = TRUE
             }
         }
