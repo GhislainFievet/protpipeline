@@ -42,8 +42,8 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
     keepProt <- keepProt_inf & keepProt_sup
 
 
-    max_4mnar = 100*(1-MNAR_threshold)
-    min_4mnar = 100*MNAR_threshold
+    max_4mnar = 100*2/3
+    min_4mnar = 100*1/3
 
     print(df_conditions)
 
@@ -53,7 +53,6 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
 
         for (str_group in unique(df_conditions$condition)){
             my_samples <- df_conditions[df_conditions$condition==str_group, "label"]
-            print(my_samples)
             max_length = length(my_samples)
     #         message(max_length)
     #         display(x[df_conditions[df_conditions$condition==str_group, "sample_name"]])
