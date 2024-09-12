@@ -43,6 +43,8 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
 
     if ( group_threshold_mode == "simple+group"){
         keepProt <- unlist(apply(df_prot, 1, function(x) length(which(is.na(x)))/length(x) <= global_threshold))
+        print("simple+group")
+        print(sum(keepProt))
         condition.filter <- sapply(colnames(df_thresholds), function(x) {
             # print(x)
             # print(colnames(df_prot))
@@ -50,9 +52,8 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
             apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
         })
         print("Before keepProt")
-        print(keepProt)
         print("After keepProt")
-        print(apply( condition.filter, 1, any ))
+        #print(apply( condition.filter, 1, any ))
         keepProt <- keepProt | apply( condition.filter, 1, any )
         print("end keepProt")
     }
