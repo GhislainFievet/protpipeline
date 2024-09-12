@@ -39,6 +39,22 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
         keepProt <- unlist(apply(df_prot, 1, function(x) length(which(is.na(x)))/length(x) <= global_threshold))
     }
 
+    if ( group_threshold_mode == "simple+group"){
+        keepProt <- unlist(apply(df_prot, 1, function(x) length(which(is.na(x)))/length(x) <= global_threshold))
+        condition.filter <- sapply(colnames(df_thresholds), function(x) {
+            # print(x)
+            # print(colnames(df_prot))
+            # print(samples.in.conditions[[x]])
+            apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds[1,x])
+        })
+        print("Before keepProt")
+        print(keepProt)
+        print("After keepProt")
+        print(apply( condition.filter, 1, any ))
+        keepProt <- keepProt | apply( condition.filter, 1, any )
+        print("end keepProt")
+    }
+
     prot_final <- df_prot[keepProt,]
 
     message(paste0("Writing ", output_path, " file"))
