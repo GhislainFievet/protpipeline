@@ -40,8 +40,8 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
 
     prot_final <- df_prot[keepProt,]
 
-    df_filtered_prot = read.table(prot_filter_path)
-    prot_final <- prot_final[setdiff(rownames(prot_final), rownames(df_filtered_prot)),]
+    # df_filtered_prot = read.table(prot_filter_path)
+    # prot_final <- prot_final[setdiff(rownames(prot_final), rownames(df_filtered_prot)),]
 
     message(paste0("Writing ", output_path, " file"))
     rownames(prot_final) = unlist(lapply(rownames(prot_final), function(x){
