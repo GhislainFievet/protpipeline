@@ -35,10 +35,39 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
         apply(as.matrix(df_prot[,samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds_sup[1,x])
     })
 
+
+
     keepProt_inf <- apply( condition.filter_inf, 1, any )
     keepProt_sup <- apply( condition.filter_sup, 1, any )
     keepProt <- keepProt_inf & keepProt_sup
 
+
+    max_4mnar = 100*(1-MNAR_threshold)
+    min_4mnar = 100*MNAR_threshold
+
+    mnar_mask = apply(df_prot,1,function(x){
+        max_ok = FALSE
+        min_ok = FALSE
+
+        for (str_group in unique(df_conditions$condition)){
+            max_length = length(df_conditions[df_conditions$condition==str_group, "new_name"])
+    #         message(max_length)
+    #         display(x[df_conditions[df_conditions$condition==str_group, "sample_name"]])
+            not_na = sum(!is.na(x[df_conditions[df_conditions$condition==str_group, "new_name"]]))
+            proport = (not_na / max_length)*100
+    #         display(proport)
+            if (proport <= min_4mnar){
+                min_ok = TRUE
+            }
+            if (proport >= max_4mnar){
+                max_ok = TRUE
+            }
+        }
+
+        return(max_ok && min_ok)
+    })
+    print(sum(mnar_mask))
+    keepProt <- mnar_mask
     prot_final <- df_prot[keepProt,]
 
     # df_filtered_prot = read.table(prot_filter_path)
