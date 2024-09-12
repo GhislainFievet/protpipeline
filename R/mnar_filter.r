@@ -52,10 +52,10 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
         min_ok = FALSE
 
         for (str_group in unique(df_conditions$condition)){
-            max_length = length(df_conditions[df_conditions$condition==str_group, "new_name"])
+            max_length = length(df_conditions[df_conditions$condition==str_group, "label"])
     #         message(max_length)
     #         display(x[df_conditions[df_conditions$condition==str_group, "sample_name"]])
-            not_na = sum(!is.na(x[df_conditions[df_conditions$condition==str_group, "new_name"]]))
+            not_na = sum(!is.na(x[df_conditions[df_conditions$condition==str_group, "label"]]))
             proport = (not_na / max_length)*100
     #         display(proport)
     print(proport)
