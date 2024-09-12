@@ -28,10 +28,10 @@ prot_mnar_filter <- function (prot_path, conditions_path, output_path, MNAR_thre
     }
 
     condition.filter_inf <- sapply(colnames(df_thresholds_inf), function(x) {
-        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) <= df_thresholds_inf[1,x])
+        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) < df_thresholds_inf[1,x])
     })
     condition.filter_sup <- sapply(colnames(df_thresholds_sup), function(x) {
-        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) >= df_thresholds_sup[1,x])
+        apply(as.matrix(df_prot[samples.in.conditions[[x]]]), 1, function(y) length(which(!is.na(y))) > df_thresholds_sup[1,x])
     })
 
     keepProt_inf <- apply( condition.filter_inf, 1, any )
