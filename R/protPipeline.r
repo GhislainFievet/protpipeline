@@ -24,6 +24,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
 
     proteinGroups_path = file.path(max_quant_dir, args$proteinGroups_path)
     peptides_path = file.path(max_quant_dir, args$peptides_path)
+    prot_rename_db_path = args$prot_rename_db_path
 
     # pipeline_mode
     pipeline_mode = args$pipeline_mode
@@ -47,6 +48,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     output_dir_filtered = args$output_dir_filtered
     output_dir_normalized = args$output_dir_normalized
     output_dir_imputed = args$output_dir_imputed
+    output_dir_prot_rename = args$output_dir_prot_rename
     output_dir_plots = args$output_dir_plots
 
     # output files
@@ -242,6 +244,13 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
             imputation_method, k=k, rowmax=rowmax, colmax=colmax, MNAR_filter,
             thresholds_path, group_threshold_mode, group_threshold,
             my_seed, conditions_path)
+
+    ###### Convert uniprot id to hgnc symbol ######
+    rename_output_path <- file.path(output_dir, output_dir_imputed,
+                paste0(my_prefix, "_prot_pep_renamed.txt"))
+    partial_rename_output_path <- file.path(output_dir, output_dir_imputed,
+                paste0(my_prefix, "_partialImpute_prot_pep_renamed.txt"))
+    prot_rename(impute_output_path, partial_impute_output_path, rename_output_path, partial_rename_output_path, prot_rename_db_path)
 
     ###### Plots ######
     # For proteins
