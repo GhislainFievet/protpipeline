@@ -44,3 +44,68 @@ prot_rename <- function(impute_output_path, partial_impute_output_path, rename_o
     print(partial_rename_output_path)
     write.table(df_prot, partial_rename_output_path, sep = "\t", quote = FALSE, row.names = TRUE)
 }
+
+prot_rename_biomart <- function(impute_output_path, partial_impute_output_path, rename_output_path,
+                    partial_rename_output_path){
+
+    df_prot <- read.table(impute_output_path)
+
+    uniprot_ids <- unlist(lapply(rownames(df_prot), function(x){
+        my_base <- unlist(strsplit(x, "//"))[1]
+    }))
+    uniprot_ids <- sub("-\\d+$", "", uniprot_ids)
+
+    # Use biomaRt to get the HGNC symbols
+    ensembl <- biomaRt::useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+    results <- biomaRt::getBM(
+        attributes = c("uniprotswissprot", "hgnc_symbol"),
+        filters = "uniprotswissprot",
+        values = uniprot_ids,
+        mart = ensembl
+    )
+
+    print(head(results))
+    new_index <- unlist(lapply(rownames(df_prot), function(x){
+        my_base <- unlist(strsplit(x, "//"))[1]
+        my_base <- unlist(strsplit(x, "-"))[1]
+        my_id <- paste0(unlist(strsplit(x, "//"))[2], "//", unlist(strsplit(x, "//"))[3])
+        if (!my_base %in% results$uniprotswissprot || results$hgnc_symbol[results$uniprotswissprot == my_base][1] == ""){
+            return(x)
+        } else {
+            return(paste0(results$hgnc_symbol[results$uniprotswissprot == my_base][1], "//", my_id))
+        }
+    }))
+
+    rownames(df_prot) <- new_index
+    write.table(df_prot, rename_output_path, sep = "\t", quote = FALSE, row.names = TRUE)
+
+    df_prot <- read.table(partial_impute_output_path)
+
+     uniprot_ids <- unlist(lapply(rownames(df_prot), function(x){
+        my_base <- unlist(strsplit(x, "//"))[1]
+    }))
+    uniprot_ids <- sub("-\\d+$", "", uniprot_ids)
+
+    # Use biomaRt to get the HGNC symbols
+    results <- biomaRt::getBM(
+        attributes = c("uniprotswissprot", "hgnc_symbol"),
+        filters = "uniprotswissprot",
+        values = uniprot_ids,
+        mart = ensembl
+    )
+
+    print(head(results))
+    new_index <- unlist(lapply(rownames(df_prot), function(x){
+        my_base <- unlist(strsplit(x, "//"))[1]
+        my_base <- unlist(strsplit(x, "-"))[1]
+        my_id <- paste0(unlist(strsplit(x, "//"))[2], "//", unlist(strsplit(x, "//"))[3])
+        if (!my_base %in% results$uniprotswissprot || results$hgnc_symbol[results$uniprotswissprot == my_base][1] == ""){
+            return(x)
+        } else {
+            return(paste0(results$hgnc_symbol[results$uniprotswissprot == my_base][1], "//", my_id))
+        }
+    }))
+
+    rownames(df_prot) <- new_index
+    write.table(df_prot, partial_impute_output_path, sep = "\t", quote = FALSE, row.names = TRUE)
+}

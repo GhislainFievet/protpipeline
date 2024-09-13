@@ -21,6 +21,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     MNAR_filter = args$MNAR_filter
     MNAR_threshold = args$MNAR_threshold
     partial_imputation = args$partial_imputation
+    rename_method = args$rename_method
 
     proteinGroups_path = file.path(max_quant_dir, args$proteinGroups_path)
     peptides_path = file.path(max_quant_dir, args$peptides_path)
@@ -256,7 +257,12 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
                 paste0(my_prefix, "_prot_pep_renamed.txt"))
     partial_rename_output_path <- file.path(output_dir, output_dir_prot_rename,
                 paste0(my_prefix, "_partialImpute_prot_pep_renamed.txt"))
-    prot_rename(impute_output_path, partial_impute_output_path, rename_output_path, partial_rename_output_path, prot_rename_db_path)
+    if (rename_method == "file"){
+        prot_rename(impute_output_path, partial_impute_output_path, rename_output_path, partial_rename_output_path, prot_rename_db_path)
+    }
+    if (rename_method == "biomart"){
+        prot_rename_biomart(impute_output_path, partial_impute_output_path, rename_output_path, partial_rename_output_path)
+    }
 
     ###### Plots ######
     # For proteins
