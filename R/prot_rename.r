@@ -25,7 +25,9 @@ prot_rename <- function(impute_output_path, partial_impute_output_path, rename_o
         }
     }))
     rownames(df_prot) <- new_index
-    write.table(df_prot, file = rename_output_path, sep = "\t", quote = FALSE, row.names = TRUE)
+    print("Writing rename_output_path")
+    print(rename_output_path)
+    write.table(df_prot, rename_output_path, sep = "\t", quote = FALSE, row.names = TRUE)
 
     df_prot <- read.table(partial_impute_output_path)
     new_index <- unlist(lapply(rownames(df_prot), function(x){
@@ -38,5 +40,7 @@ prot_rename <- function(impute_output_path, partial_impute_output_path, rename_o
         }
     }))
     rownames(df_prot) <- new_index
-    write.table(df_prot, file = partial_rename_output_path, sep = "\t", quote = FALSE, row.names = TRUE)
+    print("Writing partial_rename_output_path")
+    print(partial_rename_output_path)
+    write.table(df_prot, partial_rename_output_path, sep = "\t", quote = FALSE, row.names = TRUE)
 }
