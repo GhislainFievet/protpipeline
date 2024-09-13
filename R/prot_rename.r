@@ -1,5 +1,6 @@
 prot_rename <- function(impute_output_path, partial_impute_output_path, rename_output_path,
                     partial_rename_output_path, prot_rename_db_path){
+    print("prot_rename()")
     df_as <- read.csv(prot_rename_db_path, sep="\t")
 
     l_protID_hgnc <<- list()
