@@ -206,17 +206,21 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
         df_prot_mnar_filtered <- prot_mnar_filter(data_new_sample_names_path,
                     conditions_new_sample_names_path,
                     prot_mnar_filtered_path, MNAR_threshold, data_filtered_path)
+        # remove mnars from the proteome filtered file
+        remove_mnars_from_prot(data_filtered_path, prot_mnar_filtered_path)
     }
     # For peptides
     if ( pipeline_mode == "pep" && MNAR_filter){
-        pep_data_filtered_path <- file.path(output_dir,output_dir_filtered,
+        pep_mnar_data_filtered_path <- file.path(output_dir,output_dir_filtered,
                     paste0(my_prefix, "_pep_mnar.txt"))
         message(pep_data_new_sample_names_path, conditions_new_sample_names_path,
                     thresholds_path, data_filtered_path, atLeastOne, my_prefix)
         df_pep_filtered <- pep_mnar_filter(pep_data_new_sample_names_path,
                     conditions_new_sample_names_path, 
-                    pep_annotations_path, pep_data_filtered_path,
+                    pep_annotations_path, pep_mnar_data_filtered_path,
                     peptide_occurence_filter, MNAR_threshold)
+        # remove mnars from the peptidome filtered file
+        remove_mnars_from_prot(pep_data_filtered_path, pep_mnar_data_filtered_path)
     }
 
     ###### Normalization ######
@@ -262,6 +266,10 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     }
     if (rename_method == "biomart"){
         prot_rename_biomart(impute_output_path, partial_impute_output_path, rename_output_path, partial_rename_output_path)
+    }
+    if (rename_method == "none"){
+        file.copy(impute_output_path, rename_output_path)
+        file.copy(partial_impute_output_path, partial_rename_output_path)
     }
 
     ###### Plots ######

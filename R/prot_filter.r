@@ -244,3 +244,24 @@ pep_filter_both <- function (pep_path, prot_path, conditions_path,
 
     return(pep_final)
 }
+
+
+remove_mnars_from_prot <- function(data_filtered_path, prot_mnar_filtered_path, prot_or_pep = "prot"){
+    df1 = read.table(data_filtered_path)
+    df2 = read.table(prot_mnar_filtered_path)
+    l2 <- lapply(rownames(df2), function(x) {
+        unlist(strsplit(x, "//"))[3]
+    })
+    newindex = c()
+    for ( mybase in rownames(df1)){
+        s1 <- unlist(strsplit(mybase, "//"))[1]
+        s3 <- unlist(strsplit(mybase, "//"))[3]
+        if ( s3 %in% unlist(l2) ){
+            newindex = c(newindex, paste0(s1, "//mnar_", prot_or_pep, "//", mybase))
+        } else {
+            newindex = c(newindex, mybase)
+        }
+    }
+    rownames(df1) = newindex
+    write.table(df1, data_filtered_path, sep="\t", quote=F)
+}
