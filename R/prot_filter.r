@@ -257,7 +257,7 @@ remove_mnars_from_prot <- function(data_filtered_path, prot_mnar_filtered_path, 
         s1 <- unlist(strsplit(mybase, "//"))[1]
         s3 <- unlist(strsplit(mybase, "//"))[3]
         if ( s3 %in% unlist(l2) ){
-            newindex = c(newindex, paste0(s1, "//mnar_", prot_or_pep, "//", mybase))
+            newindex = c(newindex, paste0(s1, "//mnar_", prot_or_pep, "//", s3))
         } else {
             newindex = c(newindex, mybase)
         }
