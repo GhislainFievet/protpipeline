@@ -189,7 +189,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
         pep_data_filtered_path <- file.path(output_dir,output_dir_filtered,
                     paste0(my_prefix, "_", output_peptidome_data))
         message(pep_data_new_sample_names_path, conditions_new_sample_names_path,
-                    thresholds_path, data_filtered_path, atLeastOne, my_prefix)
+                    thresholds_path, pep_data_filtered_path, atLeastOne, my_prefix)
         df_pep_filtered <- pep_filter(pep_data_new_sample_names_path,
                     conditions_new_sample_names_path, thresholds_path,
                     pep_annotations_path, pep_data_filtered_path,
