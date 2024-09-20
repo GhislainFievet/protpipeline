@@ -57,7 +57,7 @@ pep_mnar_filter <- function (prot_path, conditions_path,
                 pep_annotations_path,
                 output_path, peptide_occurence_filter=1,
                 MNAR_threshold){
-    message(paste(prot_path, conditions_path, thresholds_path, pep_annotations_path,
+    message(paste(prot_path, conditions_path, pep_annotations_path,
         output_path, peptide_occurence_filter, MNAR_threshold))
     df_prot = read.csv(prot_path, sep="\t")
     df_conditions = read.csv(conditions_path, sep="\t")
