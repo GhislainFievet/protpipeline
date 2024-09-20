@@ -101,6 +101,7 @@ pep_mnar_filter <- function (prot_path, conditions_path,
 
     prot_with_id = prot_final
     prot_with_id$id = rownames(prot_with_id)
+    df_annot = read.csv(pep_annotations_path, sep="\t")
     df_annot$id = rownames(df_annot)
     df_full_annots = merge(x = prot_with_id, y = df_annot, by = "id", all.x = TRUE)
 
