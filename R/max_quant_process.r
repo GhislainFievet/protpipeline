@@ -7,8 +7,12 @@
 prot_max_quant_process <- function ( proteinGroups_path, conditions_path, output_prot_file,
         samples__old_names__new_names_file, prot_annotations_path, remove_reverse_identified_contaminant=TRUE,
         my_prefix=""){
+                message("prot_max_quant_process")
+    message(paste0("proteinGroups_path: ", proteinGroups_path))
     df_prot <- read.csv(proteinGroups_path, sep="\t")
+    message(paste0("conditions_path: ", conditions_path))
     df_annotations <- read.csv(conditions_path, sep="\t")
+    print(df_annotations)
 
     if ( remove_reverse_identified_contaminant ){
         df_prot<-df_prot[!(df_prot$Reverse=="+" | df_prot$Only.identified.by.site=="+" | df_prot$Potential.contaminant=="+"),]
