@@ -10,6 +10,7 @@ normalize_filter_folder <- function(filter_folder_path, output_path, norm_method
     df <- read.csv(list_files[1], sep="\t")
     for (file in list_files[2:length(list_files)]){
         df_temp = read.csv(file, sep="\t")
+        df_temp <- df_temp[setdiff(rownames(df_temp), rownames(df)),]
         df = rbind(df, df_temp)
     }
 
