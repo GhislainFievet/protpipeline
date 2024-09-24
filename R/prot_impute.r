@@ -67,7 +67,7 @@ prot_impute <- function (prot_path, output_path, output_partial_path, imputation
 
     for ( cond in unique(df_conditions$condition) ){
         cond_mask <- apply(t(df_norm_quant), 1, function(x){
-            length(which(!is.na(unname(unlist(x[df_conditions[df_conditions$condition == cond, "new_name"]]))))) < df_thresholds[1,cond]
+            sum(!is.na(unname(unlist(x[df_conditions[df_conditions$condition == cond, "new_name"]])))) < df_thresholds[1,cond]
         })
         df_result_full[df_conditions[df_conditions$condition == cond, "new_name"], cond_mask] <- 
             df_norm_quant[df_conditions[df_conditions$condition == cond, "new_name"], cond_mask]
