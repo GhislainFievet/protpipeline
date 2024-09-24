@@ -107,5 +107,6 @@ prot_rename_biomart <- function(impute_output_path, partial_impute_output_path, 
     }))
 
     rownames(df_prot) <- new_index
-    write.table(df_prot, partial_impute_output_path, sep = "\t", quote = FALSE, row.names = TRUE)
+    print(paste("Writing", partial_rename_output_path))
+    write.table(df_prot, partial_rename_output_path, sep = "\t", quote = FALSE, row.names = TRUE)
 }
