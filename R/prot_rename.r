@@ -65,9 +65,10 @@ prot_rename_biomart <- function(impute_output_path, partial_impute_output_path, 
     )
 
     print(head(results))
+    print(dim(results))
     new_index <- unlist(lapply(rownames(df_prot), function(x){
         my_base <- unlist(strsplit(x, "//"))[1]
-        my_base <- unlist(strsplit(x, "-"))[1]
+        my_base <- unlist(strsplit(my_base, "-"))[1]
         my_id <- paste0(unlist(strsplit(x, "//"))[2], "//", unlist(strsplit(x, "//"))[3])
         if (!my_base %in% results$uniprotswissprot || results$hgnc_symbol[results$uniprotswissprot == my_base][1] == ""){
             return(x)
@@ -95,9 +96,10 @@ prot_rename_biomart <- function(impute_output_path, partial_impute_output_path, 
     )
 
     print(head(results))
+    print(dim(results))
     new_index <- unlist(lapply(rownames(df_prot), function(x){
         my_base <- unlist(strsplit(x, "//"))[1]
-        my_base <- unlist(strsplit(x, "-"))[1]
+        my_base <- unlist(strsplit(my_base, "-"))[1]
         my_id <- paste0(unlist(strsplit(x, "//"))[2], "//", unlist(strsplit(x, "//"))[3])
         if (!my_base %in% results$uniprotswissprot || results$hgnc_symbol[results$uniprotswissprot == my_base][1] == ""){
             return(x)
