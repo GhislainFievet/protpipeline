@@ -47,7 +47,7 @@ prot_max_quant_process <- function ( proteinGroups_path, conditions_path, output
 
     for ( ind in grep("LFQ.", colnames(df_prot)) ){
         name = colnames(df_prot)[ind]
-        if ( unlist(strsplit(name,"\\."))[3] %in% df_annotations[, 'label'] ){
+        if ( unlist(strsplit(name,"LFQ.intensity."))[2] %in% df_annotations[, 'label'] ){
             l_kept_cols = append(l_kept_cols, name)
             l_ind_kept_cols = append(l_ind_kept_cols, ind)
         }
@@ -140,7 +140,7 @@ pep_max_quant_process <- function ( proteinGroups_path, conditions_path,
 
     for ( ind in grep("LFQ.", colnames(df_prot)) ){
         name = colnames(df_prot)[ind]
-        if ( unlist(strsplit(name,"\\."))[3] %in% df_annotations[, 'label'] ){
+        if ( unlist(strsplit(name,"LFQ.intensity."))[2] %in% df_annotations[, 'label'] ){
             l_kept_cols = append(l_kept_cols, name)
             l_ind_kept_cols = append(l_ind_kept_cols, ind)
         }
