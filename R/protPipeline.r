@@ -253,10 +253,10 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     prot_impute <- prot_impute(norm_output_path, impute_output_path,
             partial_impute_output_path,
             imputation_method, k=k, rowmax=rowmax, colmax=colmax, MNAR_filter,
-            thresholds_path, group_threshold_mode, group_threshold,
+            thresholds_path, group_threshold_mode, global_threshold,
             my_seed, conditions_path)
 
-    ###### Convert uniprot id to hgnc symbol ######
+    ###### Rename: Convert uniprot id to hgnc symbol ######
     rename_output_path <- file.path(output_dir, output_dir_prot_rename,
                 paste0(my_prefix, "_prot_pep_renamed.txt"))
     partial_rename_output_path <- file.path(output_dir, output_dir_prot_rename,

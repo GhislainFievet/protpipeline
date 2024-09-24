@@ -1,7 +1,7 @@
 # source("rf_impute.r")
 
 prot_impute <- function (prot_path, output_path, output_partial_path, imputation_method, k=10, rowmax=0.4,
-            colmax=0.8, MNAR_filter, thresholds_path, group_threshold_mode, group_threshold, my_seed, conditions_path){
+            colmax=0.8, MNAR_filter, thresholds_path, group_threshold_mode, global_threshold, my_seed, conditions_path){
     message("")
     message(paste("Imputation method:", imputation_method) )
     if ( imputation_method=="knn" || imputation_method=="rf" ){
@@ -32,10 +32,10 @@ prot_impute <- function (prot_path, output_path, output_partial_path, imputation
     if ( group_threshold_mode == "file"){
         df_thresholds = read.csv(thresholds_path, sep="\t")
     } else {
-        df_thresholds = data.frame(matrix(ncol=length(unique(df_conditions$condition)), nrow=1))
+        df_thresholds = data.frame(matrix(ncol=length(unique(df_conditions$condition)),nrow=1))
         colnames(df_thresholds) = unique(df_conditions$condition)
-        for ( i in 1:length(unique(df_conditions$condition)) ){
-            df_thresholds[1,i] = sum(df_conditions$condition == unique(df_conditions$condition)[i])*group_threshold
+        for (i in 1:length(unique(df_conditions$condition))){
+            df_thresholds[1,i] = sum(df_conditions$condition == unique(df_conditions$condition)[i])*global_threshold
         }
     }
 
