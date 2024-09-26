@@ -21,6 +21,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     MNAR_filter = args$MNAR_filter
     MNAR_threshold = args$MNAR_threshold
     partial_imputation = args$partial_imputation
+    partial_imputation_threshold = args$partial_imputation_threshold
     rename_method = args$rename_method
 
     proteinGroups_path = file.path(max_quant_dir, args$proteinGroups_path)
@@ -253,8 +254,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
     prot_impute <- prot_impute(norm_output_path, impute_output_path,
             partial_impute_output_path,
             imputation_method, k=k, rowmax=rowmax, colmax=colmax, MNAR_filter,
-            thresholds_path, group_threshold_mode, global_threshold,
-            my_seed, conditions_path)
+            partial_imputation_threshold, my_seed, conditions_path)
 
     ###### Rename: Convert uniprot id to hgnc symbol ######
     rename_output_path <- file.path(output_dir, output_dir_prot_rename,
