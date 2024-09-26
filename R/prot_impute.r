@@ -33,14 +33,11 @@ prot_impute <- function (prot_path, output_path, output_partial_path, imputation
     }
 
     df_conditions = read.csv(conditions_path, sep="\t")
-    if ( group_threshold_mode == "file"){
-        df_thresholds = read.csv(thresholds_path, sep="\t")
-    } else {
-        df_thresholds = data.frame(matrix(ncol=length(unique(df_conditions$condition)),nrow=1))
-        colnames(df_thresholds) = unique(df_conditions$condition)
-        for (i in 1:length(unique(df_conditions$condition))){
-            df_thresholds[1,i] = sum(df_conditions$condition == unique(df_conditions$condition)[i])*global_threshold
-        }
+
+    df_thresholds = data.frame(matrix(ncol=length(unique(df_conditions$condition)),nrow=1))
+    colnames(df_thresholds) = unique(df_conditions$condition)
+    for (i in 1:length(unique(df_conditions$condition))){
+        df_thresholds[1,i] = sum(df_conditions$condition == unique(df_conditions$condition)[i])*global_threshold
     }
 
     # Add removed proteins
