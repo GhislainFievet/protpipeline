@@ -273,6 +273,8 @@ prot_plots <- function(before_filter_path,
 
         plot_path <- file.path(output_dir,paste0(prot_or_pep,"_distribution_plot_filter.png"))
         message("Writing ",plot_path," plot")
+        print(stats.matrix)
+        print(dim(stats.matrix))
         png(file=plot_path, width = 1000, height = 800)
         min_born <- floor(min(stats.matrix[2,])) -5
         if (nrow(stats.matrix) >= 9){
