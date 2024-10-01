@@ -1,4 +1,4 @@
-protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
+protPipeline <- function(output_dir, max_quant_dir, yaml_config_file, dir_name="pipe_results") {
     # args <- commandArgs(trailingOnly = TRUE)
 
     # if (length(args) < 3 ){
@@ -103,7 +103,7 @@ protPipeline <- function(output_dir, max_quant_dir, yaml_config_file) {
 
     # Get date and time (with seconds) for new folder
     my_prefix <- format(Sys.time(), "%Y%m%d_%H%M%S")
-    new_prot_dir <- paste0("pipe_results", "_", my_prefix)
+    new_prot_dir <- paste0(dir_name, "_", my_prefix)
     output_dir <- file.path(output_dir, new_prot_dir)
     dir.create(output_dir, recursive = TRUE)
     dir.create(file.path(output_dir, "max_quant_data"), recursive = TRUE)

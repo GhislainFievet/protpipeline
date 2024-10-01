@@ -32,7 +32,20 @@ devtools::install_github("GhislainFievet/protpipeline")
 # output_dir is the output pipeline folder 
 # max_quant_dir is the math of the folder containing the maxquant files
 # yaml_config_file is the path of the YAML configuration file
-protPipeline(output_dir, max_quant_dir, yaml_config_file)
+protPipeline(output_dir, max_quant_dir, yaml_config_file, dir_name="my_dir_name")
+```
+
+Toy example:
+```r
+# MaxQuant folder
+max_quant_dir <- system.file("extdata", "max_quant_toy_example", package="protpipeline")
+# Conditions file: file containing samples id, the studied conditions, and the new sample names
+toy_conditions_path <- system.file("extdata", "conditions_toy.txt", package="protpipeline")
+# .yaml config file, edit and modify conditions_path variable to `toy_conditions_path`
+yaml_config_file <- system.file("extdata", "config_toy_example.yaml", package="protpipeline")
+
+# Run the pipeline
+protPipeline("output_dir", max_quant_dir, yaml_config_file, dir_name="toy_example")
 ```
 
 
