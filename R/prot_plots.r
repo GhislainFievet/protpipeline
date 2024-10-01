@@ -277,11 +277,13 @@ prot_plots <- function(before_filter_path,
         print(dim(stats.matrix))
         png(file=plot_path, width = 1000, height = 800)
         min_born <- floor(min(stats.matrix[2,])) -5
+        max_born <- ceiling(max(stats.matrix[7,]))+20
+        if (nrow(stats.matrix) >= 8){
+            max_born <- ceiling(max(stats.matrix[8,]))+20
+        } 
         if (nrow(stats.matrix) >= 9){
             max_born <- ceiling(max(stats.matrix[9,]))+20
-        } else {
-            max_born <- ceiling(max(stats.matrix[8,]))+20
-        }
+        } 
         distrib_plot_filtre <- plot(stats.matrix[2,], ylab="Expression intensity", ylim = c(min_born, max_born), xlab="Samples", lwd=1, col="blue", type="l", axes=FALSE, main=paste0(prot_or_pep_5, " expression quantiles"))
         axis(2)
         lines(stats.matrix[3,], col="Red" )
@@ -289,7 +291,9 @@ prot_plots <- function(before_filter_path,
         lines(stats.matrix[5,], col="Green" )
         lines(stats.matrix[6,], col="Orange" )
         lines(stats.matrix[7,], col="Grey" )
-        lines(stats.matrix[8,], col="Black" )
+        if ( nrow(stats.matrix) >= 8){
+            lines(stats.matrix[8,], col="Black" )
+        }
         if (nrow(stats.matrix) >= 9){
             lines(stats.matrix[9,], col="Purple" )
         }
