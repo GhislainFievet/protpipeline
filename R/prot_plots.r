@@ -284,7 +284,9 @@ prot_plots <- function(before_filter_path,
         lines(stats.matrix[6,], col="Orange" )
         lines(stats.matrix[7,], col="Grey" )
         lines(stats.matrix[8,], col="Black" )
-        lines(stats.matrix[9,], col="Purple" )
+        if (nrow(stats.matrix) > 9){
+            lines(stats.matrix[9,], col="Purple" )
+        }
         legend(1, max_born, legend=c("PV", "PV10", "PV100", "PV1000", "PG1000", "PG100", "PG10", "PG"), col=c("Blue", "Red", "Darkgreen", "Green", "Orange", "Grey","Black","Purple"), lty = c(1))
         axis(side=1, labels = colnames(p_75[,1:length(colnames(tab_after))]), at = 1:length(colnames(tab_after)), cex.axis = 0.75, las=2)
         print(distrib_plot_filtre)
