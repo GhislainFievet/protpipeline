@@ -7,8 +7,10 @@ normalize_filter_folder <- function(filter_folder_path, output_path, norm_method
 
     list_files <- list.files(filter_folder_path, full.names=TRUE)
     # rbind all files in list_files
+    message(paste0("Reading ", list_files[1], " file"))
     df <- read.csv(list_files[1], sep="\t")
     for (file in list_files[2:length(list_files)]){
+        message(paste0("Reading ", file, " file"))
         df_temp = read.csv(file, sep="\t")
         df_temp <- df_temp[setdiff(rownames(df_temp), rownames(df)),]
         df = rbind(df, df_temp)
@@ -16,6 +18,7 @@ normalize_filter_folder <- function(filter_folder_path, output_path, norm_method
 
     df <- log2(df)
     
+    message(paste0("Writing ", output_path, " file"))
     write.table(df, file.path(output_dir, "data_before_normalization.txt"), sep="\t", append=F, quote=F)
 
     if ( norm_method == "quantiles" ){
