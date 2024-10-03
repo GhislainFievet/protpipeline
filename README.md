@@ -113,7 +113,7 @@ remove_reverse_identified_contaminant: TRUE
 # "file" (look for thresholds in a file)
 # "by_group" (use group_threshold on groups)
 # "simple" (use global_threshold on all samples)
-# "simple+group" (use group_threshold on at least 1 groups and global_threshold on all samples)
+# "simple+group" (use group_threshold on at least 1 group and global_threshold on all samples)
 group_threshold_mode : "simple+group"
 # format for thresholds_path file
 # tab separated
