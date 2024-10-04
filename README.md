@@ -11,7 +11,7 @@ The protpipeline package permits to build proteome from maxquant files. It handl
 
 All steps are integrated into a pipeline and can be called from the function protPipeline().
 
-![Pipeline](https://github.com/GhislainFievet/protpipeline/tree/main/im/pipeline.png)
+![Pipeline](https://github.com/GhislainFievet/protpipeline/blob/main/im/pipeline.png?raw=true)
 
 ## Installation
 
