@@ -166,3 +166,16 @@ prot_rename_db_path : "data/simple_rename_db.txt"
 # Step 6: QC plots
 
 ```
+
+# QC plots
+
+<table>
+  <tr>
+    <td><img src="https://github.com/GhislainFievet/protpipeline/blob/main/im/grid1.png?raw=true" alt="Image 1" width="500"/></td>
+    <td><img src="https://github.com/GhislainFievet/protpipeline/blob/main/im/grid2.png?raw=true" alt="Image 2" width="500"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/GhislainFievet/protpipeline/blob/main/im/grid3.png?raw=true" alt="Image 3" width="500"/></td>
+    <td><img src="https://github.com/GhislainFievet/protpipeline/blob/main/im/grid4.png?raw=true" alt="Image 4" width="500"/></td>
+  </tr>
+</table>
