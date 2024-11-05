@@ -74,10 +74,13 @@ prot_impute <- function (prot_path, output_path, output_partial_path, imputation
         df_result_full[df_conditions[df_conditions$condition == cond, "new_name"], cond_mask] <- 
             df_norm_quant[df_conditions[df_conditions$condition == cond, "new_name"], cond_mask]
     }
-    df_result_full[, grep("//prot//", colnames(df_result_full), value=T)] <-
-        df_result[, grep("//prot//", colnames(df_result_full), value=T)]
-    df_result_full[, grep("//pep//", colnames(df_result_full), value=T)] <-
-        df_result[, grep("//pep//", colnames(df_result_full), value=T)]
+
+    if ( imputation_method != "none"){
+        df_result_full[, grep("//prot//", colnames(df_result_full), value=T)] <-
+            df_result[, grep("//prot//", colnames(df_result_full), value=T)]
+        df_result_full[, grep("//pep//", colnames(df_result_full), value=T)] <-
+            df_result[, grep("//pep//", colnames(df_result_full), value=T)]
+    }
 
 
     df_result <- cbind(df_result, df_norm_quant_nof[,rows2add])
