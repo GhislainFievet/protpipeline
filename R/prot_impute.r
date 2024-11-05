@@ -20,6 +20,7 @@ prot_impute <- function (prot_path, output_path, output_partial_path, imputation
 
     # Remove proteins with more than colmax missing values
     df_norm_quant_nof = as.data.frame(t(mat_norm))
+    df_result_full <- df_norm_quant_nof
     df_norm_quant <- df_norm_quant_nof[ lapply( df_norm_quant_nof, function(x) sum(is.na(x)) / length(x) ) < colmax ]
 
     df_result <- 0
