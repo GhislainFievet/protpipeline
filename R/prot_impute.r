@@ -80,11 +80,13 @@ prot_impute <- function (prot_path, output_path, output_partial_path, imputation
             df_result[, grep("//prot//", colnames(df_result_full), value=T)]
         df_result_full[, grep("//pep//", colnames(df_result_full), value=T)] <-
             df_result[, grep("//pep//", colnames(df_result_full), value=T)]
+
+        df_result <- cbind(df_result, df_norm_quant_nof[,rows2add])
+        df_result_full <- cbind(df_result_full, df_norm_quant_nof[,rows2add])
+    } else {
+        df_result <- df_norm_quant_nof[,rows2add]
+        df_result_full <- df_norm_quant_nof[,rows2add]
     }
-
-
-    df_result <- cbind(df_result, df_norm_quant_nof[,rows2add])
-    df_result_full <- cbind(df_result_full, df_norm_quant_nof[,rows2add])
 
 
     message(paste0("Writing ", output_path, " file"))
