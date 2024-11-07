@@ -61,6 +61,9 @@ prot_filter <- function (prot_path, conditions_path, thresholds_path, output_pat
 
     prot_final <- df_prot[keepProt,]
 
+    # Remove empty lignes
+    prot_final = prot_final[rowSums(is.na(prot_final)) != ncol(prot_final),]
+
     message(paste0("Writing ", output_path, " file"))
     write.table(prot_final, file=output_path, sep="\t", append=F, quote=F)
 
